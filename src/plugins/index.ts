@@ -15,7 +15,7 @@ import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+  return doc?.title ? `${doc.title} | dossier` : 'dossier'
 }
 
 const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
@@ -90,11 +90,15 @@ export const plugins: Plugin[] = [
       },
     },
   }),
-  vercelBlobStorage({
-    enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-    collections: {
-      media: true,
-    },
-    token: process.env.BLOB_READ_WRITE_TOKEN || '',
-  }),
+  // Read token at plugin-apply time (after dotenv), not at module import time.
+  // Import-time reads miss BLOB_READ_WRITE_TOKEN when Payload loads .env later.
+  (incomingConfig) =>
+    vercelBlobStorage({
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      addRandomSuffix: true,
+      collections: {
+        media: true,
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN || '',
+    })(incomingConfig),
 ]
