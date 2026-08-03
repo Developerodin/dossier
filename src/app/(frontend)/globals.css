@@ -1,3 +1,4 @@
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -123,6 +124,63 @@
   --success: oklch(78% 0.08 200deg);
   --warning: oklch(89% 0.1 75deg);
   --error: oklch(75% 0.15 25deg);
+
+  /* Brand & homepage tokens */
+  --brand: oklch(52% 0.22 285deg);
+  --brand-foreground: oklch(100% 0 0deg);
+  --brand-soft: oklch(95% 0.04 285deg);
+  --brand-gradient: linear-gradient(
+    90deg,
+    oklch(55% 0.18 265deg),
+    oklch(52% 0.22 285deg)
+  );
+  --danger: oklch(55% 0.22 25deg);
+  --danger-foreground: oklch(100% 0 0deg);
+  --surface: oklch(100% 0 0deg);
+  --surface-muted: oklch(96.5% 0.005 265deg);
+  --heading-text: oklch(14.5% 0 0deg);
+  --muted-text: var(--muted-foreground);
+  --shadow-sm: 0 1px 2px oklch(0% 0 0deg / 6%);
+  --shadow-card: 0 4px 24px oklch(0% 0 0deg / 6%);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
+
+  /* Funding News section accents */
+  --funding-green: oklch(68% 0.2 145deg);
+  --funding-green-soft: oklch(94% 0.06 145deg);
+  --funding-series: oklch(62% 0.14 300deg);
+
+  /* Site chrome — declare once, reuse in header.css / footer.css */
+  --header-height: 3.5rem;
+  --logo-height: 1.75rem;
+  --site-gutter: 1rem;
+  --site-gap: 0.75rem;
+  --nav-gap: 1.25rem;
+  --sidebar-width: 18rem;
+  --header-border: var(--border);
+  --footer-border: var(--border);
+  --footer-muted: var(--muted-foreground);
+}
+
+.site-logo {
+  height: var(--logo-height);
+  width: auto;
+  max-width: none;
+  display: block;
+  filter: invert(1);
+}
+
+[data-theme='dark'] .site-logo {
+  filter: none;
 }
 
 [data-theme='dark'] {
@@ -161,6 +219,23 @@
   --success: oklch(28% 0.1 200deg);
   --warning: oklch(35% 0.08 70deg);
   --error: oklch(45% 0.1 25deg);
+  --brand: oklch(68% 0.18 285deg);
+  --brand-foreground: oklch(14.5% 0 0deg);
+  --brand-soft: oklch(28% 0.06 285deg);
+  --brand-gradient: linear-gradient(
+    90deg,
+    oklch(58% 0.2 265deg),
+    oklch(68% 0.18 285deg)
+  );
+  --danger: oklch(62% 0.2 25deg);
+  --danger-foreground: oklch(100% 0 0deg);
+  --surface: oklch(14.5% 0 0deg);
+  --surface-muted: oklch(20% 0 0deg);
+  --heading-text: oklch(98.5% 0 0deg);
+  --muted-text: var(--muted-foreground);
+  --funding-green: oklch(72% 0.18 145deg);
+  --funding-green-soft: oklch(28% 0.06 145deg);
+  --funding-series: oklch(72% 0.12 300deg);
 }
 
 @theme inline {
@@ -203,6 +278,9 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-soft: var(--brand-soft);
 }
 
 @layer base {

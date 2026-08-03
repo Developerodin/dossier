@@ -12,6 +12,7 @@ export const Header: GlobalConfig = {
     {
       name: 'navItems',
       type: 'array',
+      label: 'Center navigation',
       fields: [
         link({
           appearances: false,
@@ -22,6 +23,38 @@ export const Header: GlobalConfig = {
         initCollapsed: true,
         components: {
           RowLabel: '@/Header/RowLabel#RowLabel',
+        },
+      },
+    },
+    {
+      name: 'sidebarGroups',
+      type: 'array',
+      label: 'Sidebar menu groups',
+      maxRows: 5,
+      fields: [
+        {
+          name: 'label',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'links',
+          type: 'array',
+          maxRows: 3,
+          fields: [
+            link({
+              appearances: false,
+            }),
+          ],
+          admin: {
+            initCollapsed: true,
+          },
+        },
+      ],
+      admin: {
+        initCollapsed: true,
+        components: {
+          RowLabel: '@/Header/SidebarRowLabel#RowLabel',
         },
       },
     },

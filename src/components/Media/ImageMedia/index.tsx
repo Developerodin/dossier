@@ -51,6 +51,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     fill,
     pictureClassName,
     imgClassName,
+    payloadSize,
     priority,
     resource,
     size: sizeFromProps,
@@ -64,15 +65,22 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
   let src: StaticImageData | string = srcFromProps || ''
 
   if (!src && resource && typeof resource === 'object') {
-    const { alt: altFromResource, height: fullHeight, url, width: fullWidth } = resource
+    const { alt: altFromResource, height: fullHeight, url, width: fullWidth, sizes: resourceSizes } =
+      resource
 
-    width = fullWidth!
-    height = fullHeight!
+    const preferredKey = payloadSize ?? (priority ? 'large' : 'medium')
+    const sized = resourceSizes?.[preferredKey]
+    const resolvedUrl = sized?.url || url
+    const resolvedWidth = sized?.width ?? fullWidth
+    const resolvedHeight = sized?.height ?? fullHeight
+
+    width = resolvedWidth!
+    height = resolvedHeight!
     alt = altFromResource || ''
 
     const cacheTag = resource.updatedAt
 
-    src = getMediaUrl(url, cacheTag)
+    src = getMediaUrl(resolvedUrl, cacheTag)
   }
 
   const loading = loadingFromProps || (!priority ? 'lazy' : undefined)
@@ -94,7 +102,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
         placeholder="blur"
         blurDataURL={placeholderBlur}
         priority={priority}
-        quality={100}
+        quality={75}
         loading={loading}
         sizes={sizes}
         src={src}

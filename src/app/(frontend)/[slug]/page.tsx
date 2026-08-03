@@ -6,12 +6,18 @@ import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import { homeStatic } from '@/endpoints/seed/home-static'
+import { contactStatic } from '@/endpoints/seed/contact-static'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { ContactPage } from '@/components/contact'
+import { HomePage } from '@/components/home'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+
+export const dynamic = 'force-static'
+export const revalidate = 600
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -60,6 +66,10 @@ export default async function Page({ params: paramsPromise }: Args) {
     page = homeStatic
   }
 
+  if (!page && slug === 'contact') {
+    page = contactStatic
+  }
+
   if (!page) {
     return <PayloadRedirects url={url} />
   }
@@ -67,15 +77,23 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { hero, layout } = page
 
   return (
-    <article className="pt-16 pb-24">
+    <article className={decodedSlug === 'home' || decodedSlug === 'contact' ? 'pt-8' : 'pt-8 pb-8'}>
       <PageClient />
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
 
-      <RenderHero {...hero} />
-      <RenderBlocks blocks={layout} />
+      {decodedSlug === 'home' ? (
+        <HomePage />
+      ) : decodedSlug === 'contact' ? (
+        <ContactPage />
+      ) : (
+        <>
+          <RenderHero {...hero} />
+          <RenderBlocks blocks={layout} />
+        </>
+      )}
     </article>
   )
 }

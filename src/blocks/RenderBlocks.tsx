@@ -33,6 +33,11 @@ export const RenderBlocks: React.FC<{
             const Block = blockComponents[blockType]
 
             if (Block) {
+              // Skip empty content placeholders (e.g. required home layout stub)
+              if (blockType === 'content' && (!('columns' in block) || !block.columns?.length)) {
+                return null
+              }
+
               return (
                 <div className="my-16" key={index}>
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}

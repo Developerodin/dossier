@@ -1,33 +1,115 @@
-import type { CollectionSlug, GlobalSlug, Payload, PayloadRequest, File } from 'payload'
+import type { CollectionSlug, Payload, PayloadRequest, File } from 'payload'
 
 import { contactForm as contactFormData } from './contact-form'
 import { contact as contactPageData } from './contact-page'
 import { home } from './home'
-import { image1 } from './image-1'
-import { image2 } from './image-2'
-import { imageHero1 } from './image-hero-1'
-import { post1 } from './post-1'
-import { post2 } from './post-2'
-import { post3 } from './post-3'
+import { createSeedPost } from './home-posts'
+
+function placeholderMedia(alt: string) {
+  return { alt }
+}
 
 const collections: CollectionSlug[] = [
   'categories',
   'media',
   'pages',
   'posts',
+  'funding-rounds',
   'forms',
   'form-submissions',
   'search',
 ]
 
-const globals: GlobalSlug[] = ['header', 'footer']
+const categorySeed = [
+  {
+    title: 'Top Story',
+    description: 'The biggest tech stories shaping the industry right now.',
+    accentColor: '#1A1A1A',
+  },
+  {
+    title: 'AI',
+    description: 'Artificial intelligence news and breakthroughs.',
+    accentColor: '#7C3AED',
+  },
+  {
+    title: 'Startups',
+    description: 'Fresh ideas, funding and startup journeys.',
+    accentColor: '#0D9488',
+  },
+  {
+    title: 'Funding',
+    description: 'Investments, rounds and market insights.',
+    accentColor: '#2563EB',
+  },
+  {
+    title: 'Big Tech',
+    description: "Updates from the world's leading tech giants.",
+    accentColor: '#EA580C',
+  },
+  {
+    title: 'SaaS',
+    description: 'Software, platforms and cloud innovation.',
+    accentColor: '#8B5CF6',
+  },
+  {
+    title: 'FinTech',
+    description: 'Finance, payments and digital banking.',
+    accentColor: '#059669',
+  },
+  {
+    title: 'Cybersecurity',
+    description: 'Threats, protection and digital safety.',
+    accentColor: '#DC2626',
+  },
+  {
+    title: 'Climate Tech',
+    description: 'Sustainable solutions for a better future.',
+    accentColor: '#16A34A',
+  },
+  {
+    title: 'Apple',
+    description: 'Products, updates and ecosystem news.',
+    accentColor: '#171717',
+  },
+  {
+    title: 'SpaceX',
+    description: 'Space exploration and SpaceX updates.',
+    accentColor: '#1D4ED8',
+  },
+  {
+    title: 'Cloud',
+    description: 'Infrastructure, platforms and cloud-native tooling.',
+    accentColor: '#0284C7',
+  },
+  {
+    title: 'Gadgets',
+    description: 'Hardware launches, wearables and consumer tech.',
+    accentColor: '#DB2777',
+  },
+  {
+    title: 'Crypto',
+    description: 'Digital assets, protocols and on-chain markets.',
+    accentColor: '#D97706',
+  },
+  {
+    title: 'Trending',
+    description: 'The stories everyone is talking about right now.',
+    accentColor: '#7C3AED',
+  },
+] as const
 
-const categories = ['Technology', 'News', 'Finance', 'Design', 'Software', 'Engineering']
+function slugify(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+}
+
+function hoursAgo(hours: number): string {
+  return new Date(Date.now() - hours * 60 * 60 * 1000).toISOString()
+}
 
 // Next.js revalidation errors are normal when seeding the database without a server running
-// i.e. running `yarn seed` locally instead of using the admin UI within an active app
-// The app is not running to revalidate the pages and so the API routes are not available
-// These error messages can be ignored: `Error hitting revalidate route for...`
 export const seed = async ({
   payload,
   req,
@@ -37,37 +119,68 @@ export const seed = async ({
 }): Promise<void> => {
   payload.logger.info('Seeding database...')
 
-  // we need to clear the media directory before seeding
-  // as well as the collections and globals
-  // this is because while `yarn seed` drops the database
-  // the custom `/api/seed` endpoint does not
   payload.logger.info(`— Clearing collections and globals...`)
 
-  // clear the database
-  await Promise.all(
-    globals.map((global) =>
-      payload.updateGlobal({
-        slug: global,
-        data: {
-          navItems: [],
+  await Promise.all([
+    payload.updateGlobal({
+      slug: 'header',
+      data: {
+        navItems: [],
+        sidebarGroups: [],
+      },
+      depth: 0,
+      context: {
+        disableRevalidate: true,
+      },
+    }),
+    payload.updateGlobal({
+      slug: 'footer',
+      data: {
+        copyright: '© 2026 TechBlog LLC.',
+        quickLinks: [],
+        popularPages: [],
+        contact: {},
+        newsletter: {},
+        socialLinks: [],
+      },
+      depth: 0,
+      context: {
+        disableRevalidate: true,
+      },
+    }),
+    payload.updateGlobal({
+      slug: 'funding-news',
+      data: {
+        eyebrow: 'FUNDING NEWS',
+        title: 'Latest funding rounds',
+        titleAccent: 'in tech',
+        subtitle: 'Track the capital fueling the next generation of companies and ideas.',
+        ctaLabel: 'View all funding news',
+        ctaLink: '/categories/funding',
+        stats: {
+          totalFundingThisWeek: '$8.47B',
+          roundsCount: '24',
+          topSector: 'AI',
+          biggestRound: '$6B',
         },
-        depth: 0,
-        context: {
-          disableRevalidate: true,
-        },
-      }),
-    ),
-  )
+      },
+      depth: 0,
+      context: {
+        disableRevalidate: true,
+      },
+    }),
+  ])
 
-  await Promise.all(
-    collections.map((collection) => payload.db.deleteMany({ collection, req, where: {} })),
-  )
+  // Delete sequentially to avoid Postgres deadlocks with concurrent app traffic
+  for (const collection of collections) {
+    await payload.db.deleteMany({ collection, req, where: {} })
+  }
 
-  await Promise.all(
-    collections
-      .filter((collection) => Boolean(payload.collections[collection].config.versions))
-      .map((collection) => payload.db.deleteVersions({ collection, req, where: {} })),
-  )
+  for (const collection of collections) {
+    if (payload.collections[collection].config.versions) {
+      await payload.db.deleteVersions({ collection, req, where: {} })
+    }
+  }
 
   payload.logger.info(`— Seeding demo author and user...`)
 
@@ -83,114 +196,571 @@ export const seed = async ({
 
   payload.logger.info(`— Seeding media...`)
 
-  const [image1Buffer, image2Buffer, image3Buffer, hero1Buffer] = await Promise.all([
-    fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/3.x/templates/website/src/endpoints/seed/image-post1.webp',
-    ),
-    fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/3.x/templates/website/src/endpoints/seed/image-post2.webp',
-    ),
-    fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/3.x/templates/website/src/endpoints/seed/image-post3.webp',
-    ),
-    fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/3.x/templates/website/src/endpoints/seed/image-hero1.webp',
-    ),
-  ])
+  // Unique Lorem Picsum placeholders — reused across posts (+ one for home page meta)
+  const placeholderImageDefs = [
+    { seed: 'openai-gpt5', alt: 'Abstract technology lights and circuitry' },
+    { seed: 'spacex-rocket', alt: 'Rocket launch trail against a dark sky' },
+    { seed: 'apple-ios', alt: 'Minimal smartphone on a desk surface' },
+    { seed: 'figma-ipo', alt: 'Colorful design workspace desk setup' },
+    { seed: 'anthropic-claude', alt: 'Soft gradient light through glass panels' },
+    { seed: 'stripe-payouts', alt: 'City skyline reflected in glass windows' },
+    { seed: 'ransomware-security', alt: 'Server racks in a dim data center' },
+    { seed: 'climate-tech', alt: 'Solar panels across an open landscape' },
+    { seed: 'microsoft-copilot', alt: 'Modern office with screens and ambient light' },
+    { seed: 'yc-demo-day', alt: 'Startup pitch stage with audience seating' },
+    { seed: 'aws-cloud', alt: 'Data center corridor with blue lights' },
+    { seed: 'gadget-lab', alt: 'Consumer electronics on a white table' },
+    { seed: 'crypto-charts', alt: 'Trading charts on a glowing monitor' },
+    { seed: 'fintech-app', alt: 'Mobile payment interface on a phone' },
+    { seed: 'saas-dashboard', alt: 'Analytics dashboard on a laptop screen' },
+    { seed: 'home-meta', alt: 'Editorial tech blog hero placeholder' },
+  ] as const
 
-  const [demoAuthor, image1Doc, image2Doc, image3Doc, imageHomeDoc] = await Promise.all([
-    payload.create({
-      collection: 'users',
-      data: {
-        name: 'Demo Author',
-        email: 'demo-author@example.com',
-        password: 'password',
-      },
-    }),
-    payload.create({
-      collection: 'media',
-      data: image1,
-      file: image1Buffer,
-    }),
-    payload.create({
-      collection: 'media',
-      data: image2,
-      file: image2Buffer,
-    }),
-    payload.create({
-      collection: 'media',
-      data: image2,
-      file: image3Buffer,
-    }),
-    payload.create({
-      collection: 'media',
-      data: imageHero1,
-      file: hero1Buffer,
-    }),
-    categories.map((category) =>
+  const imageBuffers = await Promise.all(
+    placeholderImageDefs.map(({ seed }) =>
+      fetchFileByURL(`https://picsum.photos/seed/${seed}/1600/900.jpg`),
+    ),
+  )
+
+  const demoAuthor = await payload.create({
+    collection: 'users',
+    data: {
+      name: 'Arjun K.',
+      email: 'demo-author@example.com',
+      password: 'password',
+    },
+  })
+
+  const mediaDocs = await Promise.all(
+    placeholderImageDefs.map((def, index) =>
       payload.create({
-        collection: 'categories',
-        data: {
-          title: category,
-          slug: category,
+        collection: 'media',
+        data: placeholderMedia(def.alt),
+        file: {
+          ...imageBuffers[index],
+          name: `${def.seed}.jpg`,
         },
       }),
     ),
-  ])
+  )
+
+  const imagePool = mediaDocs.slice(0, -1)
+  const imageHomeDoc = mediaDocs[mediaDocs.length - 1]
+  const imageOpenAI = mediaDocs[0]
+
+  payload.logger.info(`— Seeding categories...`)
+
+  const categoryDocs = await Promise.all(
+    categorySeed.map((category) =>
+      payload.create({
+        collection: 'categories',
+        data: {
+          title: category.title,
+          slug: slugify(category.title),
+          description: category.description,
+          accentColor: category.accentColor,
+        },
+      }),
+    ),
+  )
+
+  const cat = Object.fromEntries(categoryDocs.map((doc) => [doc.title, doc.id])) as Record<
+    string,
+    number
+  >
 
   payload.logger.info(`— Seeding posts...`)
 
-  // Do not create posts with `Promise.all` because we want the posts to be created in order
-  // This way we can sort them by `createdAt` or `publishedAt` and they will be in the expected order
-  const post1Doc = await payload.create({
-    collection: 'posts',
-    depth: 0,
-    context: {
-      disableRevalidate: true,
-    },
-    data: post1({ heroImage: image1Doc, blockImage: image2Doc, author: demoAuthor }),
-  })
+  type SeedPostDef = {
+    title: string
+    slug: string
+    excerpt: string
+    readingTime: number
+    categories: string[]
+    publishedAt: string
+    featured?: boolean
+    featuredOrder?: number
+    breakingNews?: boolean
+    editorsPick?: boolean
+    editorsPickOrder?: number
+    viewCount?: number
+  }
 
-  const post2Doc = await payload.create({
-    collection: 'posts',
-    depth: 0,
-    context: {
-      disableRevalidate: true,
+  const postDefs: SeedPostDef[] = [
+    // Top Story + AI / Big Tech
+    {
+      title: 'OpenAI launches GPT-5 with major leaps in reasoning and efficiency',
+      slug: 'openai-launches-gpt-5',
+      excerpt:
+        'The new model sets a new benchmark in coding, multimodal understanding, and complex problem solving.',
+      readingTime: 5,
+      categories: ['Top Story', 'AI', 'Trending'],
+      publishedAt: hoursAgo(6),
+      featured: true,
+      featuredOrder: 1,
+      breakingNews: true,
+      editorsPick: true,
+      editorsPickOrder: 1,
+      viewCount: 96000,
     },
-    data: post2({ heroImage: image2Doc, blockImage: image3Doc, author: demoAuthor }),
-  })
+    {
+      title: 'Google DeepMind unveils next-gen robotics foundation model',
+      slug: 'deepmind-robotics-foundation-model',
+      excerpt: 'A new multimodal model aims to generalize robot skills across warehouses and homes.',
+      readingTime: 4,
+      categories: ['Top Story', 'AI', 'Big Tech'],
+      publishedAt: hoursAgo(20),
+      breakingNews: true,
+    },
+    {
+      title: 'Meta open-sources Llama 4 weights for research and startups',
+      slug: 'meta-llama-4-open-source',
+      excerpt: 'The release widens access to frontier-class models for builders and labs.',
+      readingTime: 4,
+      categories: ['Top Story', 'AI', 'Big Tech'],
+      publishedAt: hoursAgo(30),
+    },
+    {
+      title: 'Chipmakers race to ship AI accelerators for edge devices',
+      slug: 'ai-accelerators-edge-devices',
+      excerpt: 'On-device inference is reshaping laptop, phone, and IoT silicon roadmaps.',
+      readingTime: 5,
+      categories: ['Top Story', 'AI', 'Gadgets'],
+      publishedAt: hoursAgo(48),
+    },
+    // AI extras
+    {
+      title: 'Anthropic launches Claude 4 with improved long-context',
+      slug: 'anthropic-launches-claude-4',
+      excerpt: 'Claude 4 pushes longer context windows and stronger agentic coding workflows.',
+      readingTime: 5,
+      categories: ['AI', 'Trending'],
+      publishedAt: hoursAgo(10),
+      breakingNews: true,
+      editorsPick: true,
+      editorsPickOrder: 5,
+      viewCount: 45000,
+    },
+    {
+      title: 'Microsoft ships enterprise Copilot agents for SharePoint',
+      slug: 'microsoft-copilot-agents-sharepoint',
+      excerpt: 'Big Tech keeps pushing AI assistants deeper into workplace workflows.',
+      readingTime: 3,
+      categories: ['Big Tech', 'AI', 'SaaS'],
+      publishedAt: hoursAgo(28),
+    },
+    // Startups + Funding
+    {
+      title: 'YC demo day highlights 12 AI infrastructure startups',
+      slug: 'yc-demo-day-ai-infrastructure',
+      excerpt: 'Founders pitch eval tooling, inference routing, and agent observability stacks.',
+      readingTime: 5,
+      categories: ['Startups', 'AI'],
+      publishedAt: hoursAgo(36),
+    },
+    {
+      title: 'Climate tech startups raise $900M across Q2 deals',
+      slug: 'climate-tech-startups-raise-900m',
+      excerpt: 'Battery storage and grid software lead a rebound in climate venture funding.',
+      readingTime: 4,
+      categories: ['Climate Tech', 'Startups', 'Funding'],
+      publishedAt: hoursAgo(22),
+    },
+    {
+      title: 'Figma files for IPO, targets $12B valuation',
+      slug: 'figma-files-for-ipo',
+      excerpt: 'The design platform moves toward public markets after years of private growth.',
+      readingTime: 4,
+      categories: ['Funding', 'SaaS', 'Trending'],
+      publishedAt: hoursAgo(8),
+      breakingNews: true,
+      editorsPick: true,
+      editorsPickOrder: 4,
+      viewCount: 52000,
+    },
+    {
+      title: 'Series B boom continues for vertical SaaS founders',
+      slug: 'series-b-vertical-saas',
+      excerpt: 'Investors favor niche workflow software with sticky enterprise contracts.',
+      readingTime: 4,
+      categories: ['Startups', 'Funding', 'SaaS'],
+      publishedAt: hoursAgo(40),
+    },
+    {
+      title: 'European seed funds back more deep-tech founders',
+      slug: 'european-seed-deep-tech',
+      excerpt: 'Capital is shifting toward hardware-software hybrids and scientific startups.',
+      readingTime: 3,
+      categories: ['Startups', 'Funding'],
+      publishedAt: hoursAgo(55),
+    },
+    {
+      title: 'Angel syndicates reshape early-stage dealmaking online',
+      slug: 'angel-syndicates-online',
+      excerpt: 'Platforms are compressing diligence cycles for first checks.',
+      readingTime: 3,
+      categories: ['Startups', 'Funding'],
+      publishedAt: hoursAgo(70),
+    },
+    // Big Tech
+    {
+      title: 'Amazon expands same-day fulfillment with warehouse robots',
+      slug: 'amazon-warehouse-robots',
+      excerpt: 'Automation investments aim to cut delivery times in major metros.',
+      readingTime: 4,
+      categories: ['Big Tech'],
+      publishedAt: hoursAgo(42),
+    },
+    {
+      title: 'Netflix tests interactive ads across more markets',
+      slug: 'netflix-interactive-ads',
+      excerpt: 'The streaming giant iterates on ad formats without interrupting playback.',
+      readingTime: 3,
+      categories: ['Big Tech'],
+      publishedAt: hoursAgo(60),
+    },
+    // SaaS
+    {
+      title: 'Notion ships AI workspace agents for teams',
+      slug: 'notion-ai-workspace-agents',
+      excerpt: 'Knowledge bases get automated summaries, tasks, and meeting follow-ups.',
+      readingTime: 4,
+      categories: ['SaaS', 'AI'],
+      publishedAt: hoursAgo(33),
+    },
+    {
+      title: 'Salesforce rolls out industry clouds for healthcare ops',
+      slug: 'salesforce-healthcare-clouds',
+      excerpt: 'Verticalized CRM packs target compliance-heavy care workflows.',
+      readingTime: 4,
+      categories: ['SaaS', 'Big Tech'],
+      publishedAt: hoursAgo(75),
+    },
+    {
+      title: 'Atlassian pricing shift sparks debate among startups',
+      slug: 'atlassian-pricing-shift',
+      excerpt: 'Usage-based seats change how growing teams budget collaboration tools.',
+      readingTime: 3,
+      categories: ['SaaS', 'Startups'],
+      publishedAt: hoursAgo(85),
+    },
+    // FinTech
+    {
+      title: 'Stripe expands global payouts for SaaS platforms',
+      slug: 'stripe-expands-global-payouts',
+      excerpt: 'Marketplace builders get faster settlement options across more corridors.',
+      readingTime: 3,
+      categories: ['FinTech', 'SaaS'],
+      publishedAt: hoursAgo(14),
+    },
+    {
+      title: 'Neobanks push into small-business lending APIs',
+      slug: 'neobanks-smb-lending-apis',
+      excerpt: 'Embedded credit products are becoming a default fintech growth lever.',
+      readingTime: 4,
+      categories: ['FinTech'],
+      publishedAt: hoursAgo(45),
+    },
+    {
+      title: 'Real-time payments networks expand across Southeast Asia',
+      slug: 'realtime-payments-sea',
+      excerpt: 'Cross-border settlement times drop as QR and account-to-account rails mature.',
+      readingTime: 4,
+      categories: ['FinTech'],
+      publishedAt: hoursAgo(66),
+    },
+    {
+      title: 'BNPL firms tighten underwriting after consumer debt spike',
+      slug: 'bnpl-underwriting-tightens',
+      excerpt: 'Regulators and rising defaults force a more conservative credit stance.',
+      readingTime: 3,
+      categories: ['FinTech', 'Funding'],
+      publishedAt: hoursAgo(90),
+    },
+    // Cybersecurity
+    {
+      title: 'Major ransomware campaign targets cloud identity providers',
+      slug: 'ransomware-targets-cloud-identity',
+      excerpt: 'Security teams scramble as attackers abuse federation tokens at scale.',
+      readingTime: 6,
+      categories: ['Cybersecurity', 'Cloud'],
+      publishedAt: hoursAgo(18),
+      breakingNews: true,
+    },
+    {
+      title: 'Zero-trust adoption accelerates in mid-market enterprises',
+      slug: 'zero-trust-mid-market',
+      excerpt: 'Identity-first architectures replace VPN-centric network designs.',
+      readingTime: 5,
+      categories: ['Cybersecurity'],
+      publishedAt: hoursAgo(50),
+    },
+    {
+      title: 'Critical flaw found in popular open-source auth library',
+      slug: 'opensource-auth-library-flaw',
+      excerpt: 'Maintainers rush patches as scanners light up across SaaS estates.',
+      readingTime: 4,
+      categories: ['Cybersecurity', 'SaaS'],
+      publishedAt: hoursAgo(78),
+    },
+    {
+      title: 'Governments mandate stronger software bill-of-materials rules',
+      slug: 'sbom-mandate-rules',
+      excerpt: 'Vendors must disclose dependencies for critical infrastructure software.',
+      readingTime: 4,
+      categories: ['Cybersecurity'],
+      publishedAt: hoursAgo(100),
+    },
+    // Climate Tech
+    {
+      title: 'Grid software startups win utility modernization contracts',
+      slug: 'grid-software-utility-contracts',
+      excerpt: 'Digital twins and demand response tools help operators balance renewables.',
+      readingTime: 4,
+      categories: ['Climate Tech', 'Startups'],
+      publishedAt: hoursAgo(52),
+    },
+    {
+      title: 'Solid-state battery pilots move closer to mass production',
+      slug: 'solid-state-battery-pilots',
+      excerpt: 'Automakers and suppliers race to commercialize denser, safer cells.',
+      readingTime: 5,
+      categories: ['Climate Tech'],
+      publishedAt: hoursAgo(88),
+    },
+    {
+      title: 'Carbon accounting platforms integrate with ERP suites',
+      slug: 'carbon-accounting-erp',
+      excerpt: 'Enterprises want emissions data next to finance and supply-chain systems.',
+      readingTime: 3,
+      categories: ['Climate Tech', 'SaaS'],
+      publishedAt: hoursAgo(110),
+    },
+    {
+      title: 'Green hydrogen projects secure blended public-private capital',
+      slug: 'green-hydrogen-blended-capital',
+      excerpt: 'Policy incentives unlock multi-gigawatt pipelines in Europe and Asia.',
+      readingTime: 4,
+      categories: ['Climate Tech', 'Funding'],
+      publishedAt: hoursAgo(120),
+    },
+    // Apple
+    {
+      title: 'Apple previews iOS 19 with smarter Siri and UI overhaul',
+      slug: 'apple-previews-ios-19',
+      excerpt: 'Cupertino leans into on-device intelligence with a refreshed design language.',
+      readingTime: 4,
+      categories: ['Apple', 'Big Tech', 'Trending'],
+      publishedAt: hoursAgo(5),
+      editorsPick: true,
+      editorsPickOrder: 3,
+      viewCount: 64000,
+    },
+    {
+      title: 'Vision Pro 2 rumors point to lighter design and lower price',
+      slug: 'vision-pro-2-rumors',
+      excerpt: 'Analysts expect a thinner headset aimed at broader consumer adoption.',
+      readingTime: 3,
+      categories: ['Apple', 'Gadgets'],
+      publishedAt: hoursAgo(38),
+    },
+    {
+      title: 'Apple Pay expands tap-to-transfer across more banks',
+      slug: 'apple-pay-tap-to-transfer',
+      excerpt: 'Peer payments deepen Apple’s push into everyday financial services.',
+      readingTime: 3,
+      categories: ['Apple', 'FinTech'],
+      publishedAt: hoursAgo(72),
+    },
+    {
+      title: 'MacBook lineup gains new silicon focused on local AI',
+      slug: 'macbook-local-ai-silicon',
+      excerpt: 'Neural engines and memory bandwidth take center stage in the refresh.',
+      readingTime: 4,
+      categories: ['Apple', 'AI', 'Gadgets'],
+      publishedAt: hoursAgo(95),
+    },
+    // SpaceX
+    {
+      title: 'SpaceX raises $1.5B in new funding round at $200B valuation',
+      slug: 'spacex-raises-1-5b',
+      excerpt: 'Investors double down on Starship and Starlink as SpaceX closes another mega-round.',
+      readingTime: 3,
+      categories: ['SpaceX', 'Funding', 'Trending'],
+      publishedAt: hoursAgo(2),
+      breakingNews: true,
+      editorsPick: true,
+      editorsPickOrder: 2,
+      viewCount: 128000,
+    },
+    {
+      title: 'Starship completes successful orbital catch attempt',
+      slug: 'starship-orbital-catch',
+      excerpt: 'The booster return marks another milestone toward rapid reuse.',
+      readingTime: 4,
+      categories: ['SpaceX'],
+      publishedAt: hoursAgo(26),
+      breakingNews: true,
+    },
+    {
+      title: 'Starlink adds maritime coverage for commercial fleets',
+      slug: 'starlink-maritime-coverage',
+      excerpt: 'Shipping and offshore operators gain higher-bandwidth connectivity at sea.',
+      readingTime: 3,
+      categories: ['SpaceX'],
+      publishedAt: hoursAgo(58),
+    },
+    {
+      title: 'NASA extends Crew Dragon missions through next decade',
+      slug: 'nasa-crew-dragon-extension',
+      excerpt: 'The agency locks in more flights as ISS succession plans firm up.',
+      readingTime: 4,
+      categories: ['SpaceX'],
+      publishedAt: hoursAgo(105),
+    },
+    // Cloud
+    {
+      title: 'AWS launches new regional GPU clusters for inference',
+      slug: 'aws-gpu-clusters-inference',
+      excerpt: 'Cloud providers compete on capacity for production AI workloads.',
+      readingTime: 4,
+      categories: ['Cloud', 'AI', 'Big Tech'],
+      publishedAt: hoursAgo(24),
+    },
+    {
+      title: 'Kubernetes cost tools become table stakes for platform teams',
+      slug: 'kubernetes-cost-tools',
+      excerpt: 'FinOps practices move from dashboards into automated rightsizing.',
+      readingTime: 4,
+      categories: ['Cloud', 'SaaS'],
+      publishedAt: hoursAgo(62),
+    },
+    {
+      title: 'Multi-cloud networking startups raise fresh growth rounds',
+      slug: 'multicloud-networking-funding',
+      excerpt: 'Enterprises want simpler overlays across AWS, Azure, and GCP.',
+      readingTime: 3,
+      categories: ['Cloud', 'Funding', 'Startups'],
+      publishedAt: hoursAgo(80),
+    },
+    {
+      title: 'Serverless databases add vector search for AI apps',
+      slug: 'serverless-db-vector-search',
+      excerpt: 'Managed data planes absorb RAG patterns without ops heavy lifting.',
+      readingTime: 4,
+      categories: ['Cloud', 'AI'],
+      publishedAt: hoursAgo(115),
+    },
+    // Gadgets
+    {
+      title: 'Foldable phones push thinner designs into mainstream retail',
+      slug: 'foldable-phones-mainstream',
+      excerpt: 'Durability improvements and lower prices widen the buyer pool.',
+      readingTime: 3,
+      categories: ['Gadgets'],
+      publishedAt: hoursAgo(34),
+    },
+    {
+      title: 'Smart glasses startups demo always-on translation',
+      slug: 'smart-glasses-translation',
+      excerpt: 'Wearables chase practical AI features beyond novelty demos.',
+      readingTime: 4,
+      categories: ['Gadgets', 'AI', 'Startups'],
+      publishedAt: hoursAgo(68),
+    },
+    {
+      title: 'Earbuds race adds health sensors and longer battery life',
+      slug: 'earbuds-health-sensors',
+      excerpt: 'Audio brands compete on wellness metrics as much as sound quality.',
+      readingTime: 3,
+      categories: ['Gadgets'],
+      publishedAt: hoursAgo(98),
+    },
+    {
+      title: 'Gaming handhelds get cloud streaming partnerships',
+      slug: 'gaming-handhelds-cloud-streaming',
+      excerpt: 'Portable consoles lean on remote render farms for AAA titles.',
+      readingTime: 3,
+      categories: ['Gadgets', 'Cloud'],
+      publishedAt: hoursAgo(125),
+    },
+    // Crypto
+    {
+      title: 'Stablecoin settlement volume hits new monthly highs',
+      slug: 'stablecoin-settlement-highs',
+      excerpt: 'On-chain dollars keep gaining share in remittances and trading pairs.',
+      readingTime: 4,
+      categories: ['Crypto', 'FinTech'],
+      publishedAt: hoursAgo(16),
+    },
+    {
+      title: 'Ethereum L2 fees drop as new data availability layer ships',
+      slug: 'ethereum-l2-fees-drop',
+      excerpt: 'Cheaper rollups reignite consumer app and NFT experiments.',
+      readingTime: 4,
+      categories: ['Crypto'],
+      publishedAt: hoursAgo(44),
+    },
+    {
+      title: 'Regulators clarify custody rules for crypto exchanges',
+      slug: 'crypto-custody-rules',
+      excerpt: 'Clearer guidance reduces uncertainty for institutional desks.',
+      readingTime: 5,
+      categories: ['Crypto'],
+      publishedAt: hoursAgo(76),
+    },
+    {
+      title: 'Tokenized treasuries attract more traditional asset managers',
+      slug: 'tokenized-treasuries-managers',
+      excerpt: 'On-chain funds promise faster settlement and programmable compliance.',
+      readingTime: 4,
+      categories: ['Crypto', 'FinTech', 'Funding'],
+      publishedAt: hoursAgo(108),
+    },
+  ]
 
-  const post3Doc = await payload.create({
-    collection: 'posts',
-    depth: 0,
-    context: {
-      disableRevalidate: true,
-    },
-    data: post3({ heroImage: image3Doc, blockImage: image1Doc, author: demoAuthor }),
-  })
+  const createdPosts = []
 
-  // update each post with related posts
-  await payload.update({
-    id: post1Doc.id,
-    collection: 'posts',
-    data: {
-      relatedPosts: [post2Doc.id, post3Doc.id],
-    },
-  })
-  await payload.update({
-    id: post2Doc.id,
-    collection: 'posts',
-    data: {
-      relatedPosts: [post1Doc.id, post3Doc.id],
-    },
-  })
-  await payload.update({
-    id: post3Doc.id,
-    collection: 'posts',
-    data: {
-      relatedPosts: [post1Doc.id, post2Doc.id],
-    },
-  })
+  for (let i = 0; i < postDefs.length; i++) {
+    const def = postDefs[i]
+    const categoryIds = def.categories.map((name) => cat[name]).filter(Boolean)
+    const doc = await payload.create({
+      collection: 'posts',
+      depth: 0,
+      context: {
+        disableRevalidate: true,
+      },
+      data: createSeedPost({
+        title: def.title,
+        slug: def.slug,
+        excerpt: def.excerpt,
+        readingTime: def.readingTime,
+        categoryIds,
+        heroImage: imagePool[i % imagePool.length],
+        author: demoAuthor,
+        publishedAt: def.publishedAt,
+        featured: def.featured,
+        featuredOrder: def.featuredOrder,
+        breakingNews: def.breakingNews,
+        editorsPick: def.editorsPick,
+        editorsPickOrder: def.editorsPickOrder,
+        viewCount: def.viewCount,
+      }),
+    })
+    createdPosts.push(doc)
+  }
+
+  // Link a few related posts for archive/detail pages
+  if (createdPosts.length >= 3) {
+    await payload.update({
+      id: createdPosts[0].id,
+      collection: 'posts',
+      data: {
+        relatedPosts: [createdPosts[1].id, createdPosts[2].id],
+      },
+      context: { disableRevalidate: true },
+    })
+  }
 
   payload.logger.info(`— Seeding contact form...`)
 
@@ -202,74 +772,213 @@ export const seed = async ({
 
   payload.logger.info(`— Seeding pages...`)
 
-  const [_, contactPage] = await Promise.all([
+  await Promise.all([
     payload.create({
       collection: 'pages',
       depth: 0,
-      data: home({ heroImage: imageHomeDoc, metaImage: image2Doc }),
+      context: {
+        disableRevalidate: true,
+      },
+      data: home({ heroImage: imageHomeDoc, metaImage: imageOpenAI }),
     }),
     payload.create({
       collection: 'pages',
       depth: 0,
+      context: {
+        disableRevalidate: true,
+      },
       data: contactPageData({ contactForm: contactForm }),
     }),
   ])
 
+  payload.logger.info(`— Seeding funding rounds...`)
+
+  const fundingRoundsSeed = [
+    {
+      companyName: 'xAI',
+      slug: 'xai',
+      series: 'series-b' as const,
+      amount: '$6B',
+      amountValue: 6,
+      sector: 'Artificial Intelligence',
+      announcedAt: hoursAgo(2),
+      topDeal: true,
+      investors: [
+        { name: 'a16z' },
+        { name: 'SEQUOIA' },
+        { name: 'VALOR EQUITY PARTNERS' },
+      ],
+    },
+    {
+      companyName: 'Wayve',
+      slug: 'wayve',
+      series: 'series-c' as const,
+      amount: '$1.05B',
+      amountValue: 1.05,
+      sector: 'Autonomous Driving',
+      announcedAt: hoursAgo(5),
+      topDeal: false,
+      investors: [{ name: 'SOFTBANK' }, { name: 'NVIDIA' }, { name: 'MICROSOFT' }],
+    },
+    {
+      companyName: 'Harvey',
+      slug: 'harvey',
+      series: 'series-d' as const,
+      amount: '$300M',
+      amountValue: 0.3,
+      sector: 'Legal Tech',
+      announcedAt: hoursAgo(8),
+      topDeal: false,
+      investors: [{ name: 'OPENAI' }, { name: 'GV' }, { name: 'SEQUOIA' }],
+    },
+    {
+      companyName: 'Decagon',
+      slug: 'decagon',
+      series: 'series-c' as const,
+      amount: '$131M',
+      amountValue: 0.131,
+      sector: 'Customer Support AI',
+      announcedAt: hoursAgo(12),
+      topDeal: false,
+      investors: [{ name: 'ACCEL' }, { name: 'A16Z' }, { name: 'INDEX' }],
+    },
+  ]
+
+  for (const round of fundingRoundsSeed) {
+    await payload.create({
+      collection: 'funding-rounds',
+      depth: 0,
+      context: { disableRevalidate: true },
+      data: {
+        ...round,
+        generateSlug: false,
+        _status: 'published',
+      },
+    })
+  }
+
   payload.logger.info(`— Seeding globals...`)
+
+  const customLink = (label: string, url = '#') => ({
+    link: {
+      type: 'custom' as const,
+      label,
+      url,
+    },
+  })
 
   await Promise.all([
     payload.updateGlobal({
       slug: 'header',
+      depth: 0,
+      context: {
+        disableRevalidate: true,
+      },
       data: {
         navItems: [
+          customLink('AI', '/categories/ai'),
+          customLink('Startups', '/categories/startups'),
+          customLink('Cybersecurity', '/categories/cybersecurity'),
+          customLink('Latest', '/posts'),
+        ],
+        sidebarGroups: [
           {
-            link: {
-              type: 'custom',
-              label: 'Posts',
-              url: '/posts',
-            },
+            label: 'Topics',
+            links: [
+              customLink('Artificial Intelligence', '/categories/ai'),
+              customLink('Cloud', '/categories/cloud'),
+              customLink('Gadgets', '/categories/gadgets'),
+            ],
           },
           {
-            link: {
-              type: 'reference',
-              label: 'Contact',
-              reference: {
-                relationTo: 'pages',
-                value: contactPage.id,
-              },
-            },
+            label: 'Startups',
+            links: [
+              customLink('Funding', '/categories/funding'),
+              customLink('Founders'),
+              customLink('Exits'),
+            ],
+          },
+          {
+            label: 'Cybersecurity',
+            links: [
+              customLink('Breaches', '/categories/cybersecurity'),
+              customLink('Privacy'),
+              customLink('Policy'),
+            ],
+          },
+          {
+            label: 'Company',
+            links: [customLink('About'), customLink('Careers'), customLink('Advertise')],
+          },
+          {
+            label: 'Resources',
+            links: [
+              customLink('Newsletters'),
+              customLink('Events'),
+              customLink('Reports'),
+            ],
           },
         ],
       },
     }),
     payload.updateGlobal({
       slug: 'footer',
+      depth: 0,
+      context: {
+        disableRevalidate: true,
+      },
       data: {
-        navItems: [
-          {
-            link: {
-              type: 'custom',
-              label: 'Admin',
-              url: '/admin',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Source Code',
-              newTab: true,
-              url: 'https://github.com/payloadcms/payload/tree/3.x/templates/website',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Payload',
-              newTab: true,
-              url: 'https://payloadcms.com/',
-            },
-          },
+        copyright: '© 2026 TechBlog LLC.',
+        quickLinks: [
+          customLink('About'),
+          customLink('Contact', '/contact'),
+          customLink('Advertise'),
+          customLink('Careers'),
         ],
+        popularPages: [
+          customLink('AI', '/categories/ai'),
+          customLink('Startups', '/categories/startups'),
+          customLink('Cybersecurity', '/categories/cybersecurity'),
+          customLink('Latest', '/posts'),
+        ],
+        contact: {
+          heading: 'Contact us',
+          email: 'hello@techblog.example',
+          phone: '',
+          url: '/contact',
+        },
+        newsletter: {
+          heading: 'Newsletter',
+          placeholder: 'Your email',
+          buttonLabel: 'Subscribe',
+        },
+        socialLinks: [
+          { platform: 'x', url: '#' },
+          { platform: 'linkedin', url: '#' },
+          { platform: 'youtube', url: '#' },
+          { platform: 'github', url: '#' },
+        ],
+      },
+    }),
+    payload.updateGlobal({
+      slug: 'funding-news',
+      depth: 0,
+      context: {
+        disableRevalidate: true,
+      },
+      data: {
+        eyebrow: 'FUNDING NEWS',
+        title: 'Latest funding rounds',
+        titleAccent: 'in tech',
+        subtitle: 'Track the capital fueling the next generation of companies and ideas.',
+        ctaLabel: 'View all funding news',
+        ctaLink: '/categories/funding',
+        stats: {
+          totalFundingThisWeek: '$8.47B',
+          roundsCount: '24',
+          topSector: 'AI',
+          biggestRound: '$6B',
+        },
       },
     }),
   ])
@@ -281,6 +990,7 @@ async function fetchFileByURL(url: string): Promise<File> {
   const res = await fetch(url, {
     credentials: 'include',
     method: 'GET',
+    redirect: 'follow',
   })
 
   if (!res.ok) {
@@ -288,11 +998,17 @@ async function fetchFileByURL(url: string): Promise<File> {
   }
 
   const data = await res.arrayBuffer()
+  const contentType = res.headers.get('content-type') || 'image/jpeg'
+  const extension = contentType.includes('png')
+    ? 'png'
+    : contentType.includes('webp')
+      ? 'webp'
+      : 'jpg'
 
   return {
-    name: url.split('/').pop() || `file-${Date.now()}`,
+    name: url.split('/').pop()?.replace(/\?.*$/, '') || `file-${Date.now()}.${extension}`,
     data: Buffer.from(data),
-    mimetype: `image/${url.split('.').pop()}`,
+    mimetype: contentType.split(';')[0].trim() || `image/${extension === 'jpg' ? 'jpeg' : extension}`,
     size: data.byteLength,
   }
 }

@@ -1,13 +1,23 @@
 'use client'
-import { Header } from '@/payload-types'
+import { Footer } from '@/payload-types'
 import { RowLabelProps, useRowLabel } from '@payloadcms/ui'
 
-export const RowLabel: React.FC<RowLabelProps> = () => {
-  const data = useRowLabel<NonNullable<Header['navItems']>[number]>()
+export const QuickLinksRowLabel: React.FC<RowLabelProps> = () => {
+  const data = useRowLabel<NonNullable<Footer['quickLinks']>[number]>()
 
   const label = data?.data?.link?.label
-    ? `Nav item ${data.rowNumber !== undefined ? data.rowNumber + 1 : ''}: ${data?.data?.link?.label}`
-    : 'Row'
+    ? `Quick link ${data.rowNumber !== undefined ? data.rowNumber + 1 : ''}: ${data.data.link.label}`
+    : 'Quick link'
+
+  return <div>{label}</div>
+}
+
+export const PopularPagesRowLabel: React.FC<RowLabelProps> = () => {
+  const data = useRowLabel<NonNullable<Footer['popularPages']>[number]>()
+
+  const label = data?.data?.link?.label
+    ? `Popular page ${data.rowNumber !== undefined ? data.rowNumber + 1 : ''}: ${data.data.link.label}`
+    : 'Popular page'
 
   return <div>{label}</div>
 }

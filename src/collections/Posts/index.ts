@@ -42,6 +42,11 @@ export const Posts: CollectionConfig<'posts'> = {
     title: true,
     slug: true,
     categories: true,
+    excerpt: true,
+    readingTime: true,
+    heroImage: true,
+    publishedAt: true,
+    populatedAuthors: true,
     meta: {
       image: true,
       description: true,
@@ -160,6 +165,81 @@ export const Posts: CollectionConfig<'posts'> = {
           ],
         },
       ],
+    },
+    {
+      name: 'excerpt',
+      type: 'textarea',
+      admin: {
+        position: 'sidebar',
+        description: 'Short summary shown on the homepage hero and cards.',
+      },
+    },
+    {
+      name: 'readingTime',
+      type: 'number',
+      admin: {
+        position: 'sidebar',
+        description: 'Estimated reading time in minutes.',
+      },
+      label: 'Reading time (min)',
+      min: 1,
+    },
+    {
+      name: 'viewCount',
+      type: 'number',
+      admin: {
+        position: 'sidebar',
+        description: 'Display view count on cards (e.g. 128000 shows as 128K).',
+      },
+      label: 'View count',
+      min: 0,
+    },
+    {
+      name: 'featured',
+      type: 'checkbox',
+      admin: {
+        position: 'sidebar',
+        description: 'Show this post as the homepage featured story.',
+      },
+      defaultValue: false,
+    },
+    {
+      name: 'featuredOrder',
+      type: 'number',
+      admin: {
+        position: 'sidebar',
+        description: 'Lower numbers appear first among featured posts.',
+        condition: (_, siblingData) => Boolean(siblingData?.featured),
+      },
+      defaultValue: 0,
+    },
+    {
+      name: 'editorsPick',
+      type: 'checkbox',
+      admin: {
+        position: 'sidebar',
+        description: "Show this post in the homepage Editor's Picks section.",
+      },
+      defaultValue: false,
+    },
+    {
+      name: 'editorsPickOrder',
+      type: 'number',
+      admin: {
+        position: 'sidebar',
+        description: "Lower numbers appear first among editor's picks. First pick is the Top Pick.",
+        condition: (_, siblingData) => Boolean(siblingData?.editorsPick),
+      },
+      defaultValue: 0,
+    },
+    {
+      name: 'breakingNews',
+      type: 'checkbox',
+      admin: {
+        position: 'sidebar',
+        description: 'Include this post in the breaking news ticker.',
+      },
+      defaultValue: false,
     },
     {
       name: 'publishedAt',

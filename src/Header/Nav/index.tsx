@@ -5,21 +5,15 @@ import React from 'react'
 import type { Header as HeaderType } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
-import Link from 'next/link'
-import { SearchIcon } from 'lucide-react'
 
-export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
-  const navItems = data?.navItems || []
+type NavItem = NonNullable<HeaderType['navItems']>[number]
 
+export const HeaderNav: React.FC<{ items: NavItem[] }> = ({ items }) => {
   return (
-    <nav className="flex gap-3 items-center">
-      {navItems.map(({ link }, i) => {
-        return <CMSLink key={i} {...link} appearance="link" />
-      })}
-      <Link href="/search">
-        <span className="sr-only">Search</span>
-        <SearchIcon className="w-5 text-primary" />
-      </Link>
+    <nav className="site-header__nav" aria-label="Primary">
+      {items.map(({ link }, i) => (
+        <CMSLink key={i} {...link} appearance="inline" className="site-header__nav-link" />
+      ))}
     </nav>
   )
 }

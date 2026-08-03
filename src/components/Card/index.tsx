@@ -46,7 +46,7 @@ export const Card: React.FC<{
           <div className="uppercase text-sm mb-4">
             {categories?.map((category, index) => {
               if (typeof category === 'object') {
-                const { title: titleFromCategory } = category
+                const { title: titleFromCategory, slug: categorySlug } = category
 
                 const categoryTitle = titleFromCategory || 'Untitled category'
 
@@ -54,7 +54,13 @@ export const Card: React.FC<{
 
                 return (
                   <Fragment key={index}>
-                    {categoryTitle}
+                    {categorySlug ? (
+                      <Link href={`/categories/${categorySlug}`} onClick={(e) => e.stopPropagation()}>
+                        {categoryTitle}
+                      </Link>
+                    ) : (
+                      categoryTitle
+                    )}
                     {!isLast && <Fragment>, &nbsp;</Fragment>}
                   </Fragment>
                 )

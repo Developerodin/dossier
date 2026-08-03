@@ -1,0 +1,886 @@
+/* Contact page — uses globals.css tokens */
+
+.contact-page {
+  --contact-ink: var(--heading-text);
+  --contact-muted: var(--muted-text);
+  --contact-card-radius: var(--radius-xl);
+  --contact-soft: var(--brand-soft);
+  color: var(--contact-ink);
+}
+
+.contact-page a:focus-visible,
+.contact-page button:focus-visible,
+.contact-page input:focus-visible,
+.contact-page select:focus-visible,
+.contact-page textarea:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* ─── Hero ─────────────────────────────────────────── */
+
+.contact-hero {
+  position: relative;
+  padding-block: var(--space-10) var(--space-8);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 28%, color-mix(in oklab, var(--brand) 8%, transparent), transparent 42%),
+    radial-gradient(circle at 82% 18%, color-mix(in oklab, var(--brand) 6%, transparent), transparent 38%),
+    var(--background);
+}
+
+.contact-hero::before {
+  content: '';
+  position: absolute;
+  inset: -20% auto auto 50%;
+  width: min(48rem, 90vw);
+  height: min(48rem, 90vw);
+  translate: -50% 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--brand) 12%, transparent);
+  pointer-events: none;
+  box-shadow:
+    0 0 0 4.5rem color-mix(in oklab, var(--brand) 4%, transparent),
+    0 0 0 9rem color-mix(in oklab, var(--brand) 3%, transparent);
+}
+
+.contact-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-8);
+  width: min(100% - (var(--site-gutter) * 2), 72rem);
+  margin-inline: auto;
+}
+
+.contact-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.contact-hero__eyebrow-line {
+  display: inline-block;
+  width: 1.25rem;
+  height: 2px;
+  background: var(--brand);
+  border-radius: 999px;
+}
+
+.contact-hero__title {
+  margin: 0 0 var(--space-4);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--contact-ink);
+}
+
+.contact-hero__title-accent {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-caveat), cursive;
+  font-size: 1.15em;
+  font-weight: 700;
+  color: var(--brand);
+  line-height: 1;
+}
+
+.contact-hero__title-underline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.15em;
+  height: 0.35em;
+  background: color-mix(in oklab, var(--brand) 35%, transparent);
+  border-radius: 999px;
+  transform: skewX(-12deg);
+}
+
+.contact-hero__subtitle {
+  margin: 0 0 var(--space-6);
+  max-width: 32rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--contact-muted);
+}
+
+.contact-hero__tips {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contact-hero__tip {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.contact-hero__tip-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.contact-hero__tip-text {
+  padding-top: 0.45rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--contact-ink);
+}
+
+/* ─── Form card ────────────────────────────────────── */
+
+.contact-form {
+  position: relative;
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--contact-card-radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.contact-form__pattern {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 7rem;
+  height: 7rem;
+  background-image: radial-gradient(color-mix(in oklab, var(--brand) 45%, transparent) 1.25px, transparent 1.25px);
+  background-size: 10px 10px;
+  mask-image: linear-gradient(225deg, #000 20%, transparent 70%);
+  pointer-events: none;
+}
+
+.contact-form__header {
+  position: relative;
+  margin-bottom: var(--space-5);
+}
+
+.contact-form__title {
+  margin: 0 0 var(--space-2);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--contact-ink);
+}
+
+.contact-form__subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--contact-muted);
+}
+
+.contact-form__form {
+  position: relative;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.contact-form__row {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.contact-form__field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.contact-form__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--contact-ink);
+}
+
+.contact-form__input-wrap,
+.contact-form__select-wrap {
+  position: relative;
+  display: block;
+}
+
+.contact-form__input-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  translate: 0 -50%;
+  color: var(--contact-muted);
+  pointer-events: none;
+}
+
+.contact-form__input-icon--at {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.contact-form__input,
+.contact-form__select,
+.contact-form__textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--contact-ink);
+  font: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.contact-form__input,
+.contact-form__select {
+  height: 2.75rem;
+  padding-inline: 2.5rem 0.9rem;
+}
+
+.contact-form__textarea {
+  min-height: 8rem;
+  padding: 0.85rem 0.9rem;
+  resize: vertical;
+}
+
+.contact-form__input::placeholder,
+.contact-form__textarea::placeholder {
+  color: color-mix(in oklab, var(--contact-muted) 85%, transparent);
+}
+
+.contact-form__input:focus,
+.contact-form__select:focus,
+.contact-form__textarea:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand) 25%, transparent);
+  outline: none;
+}
+
+.contact-form__select {
+  appearance: none;
+  padding-inline: 0.9rem 2.5rem;
+  cursor: pointer;
+}
+
+.contact-form__select-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  translate: 0 -50%;
+  color: var(--contact-muted);
+  pointer-events: none;
+}
+
+.contact-form__privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--contact-muted);
+}
+
+.contact-form__checkbox {
+  margin-top: 0.2rem;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--brand);
+  flex-shrink: 0;
+}
+
+.contact-form__link {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.contact-form__link:hover {
+  text-decoration: underline;
+}
+
+.contact-form__error {
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--error) 25%, var(--surface));
+  color: var(--destructive);
+  font-size: 0.875rem;
+}
+
+.contact-form__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  height: 2.85rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.contact-form__submit:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.contact-form__submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.contact-form__success {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.contact-form__success-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.contact-form__success-text {
+  margin: 0 0 var(--space-2);
+  color: var(--contact-muted);
+}
+
+/* ─── Mid section ──────────────────────────────────── */
+
+.contact-mid {
+  padding-block: var(--space-4) var(--space-10);
+}
+
+.contact-mid__inner {
+  display: grid;
+  gap: var(--space-10);
+  width: min(100% - (var(--site-gutter) * 2), 72rem);
+  margin-inline: auto;
+}
+
+.contact-channels {
+  order: 1;
+}
+
+.contact-faq {
+  order: 2;
+}
+
+.contact-team {
+  order: 3;
+}
+
+.contact-channels__title,
+.contact-faq__title {
+  margin: 0 0 var(--space-5);
+  font-size: 1.35rem;
+  font-weight: 750;
+  color: var(--contact-ink);
+}
+
+.contact-faq__title {
+  position: relative;
+  padding-bottom: var(--space-3);
+}
+
+.contact-faq__title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 2.5rem;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--brand);
+}
+
+.contact-channels__list {
+  display: grid;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contact-channels__item {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.contact-channels__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius);
+  color: #fff;
+}
+
+.contact-channels__icon--purple {
+  background: var(--brand);
+}
+
+.contact-channels__icon--green {
+  background: oklch(62% 0.16 150deg);
+}
+
+.contact-channels__icon--peach {
+  background: oklch(72% 0.14 45deg);
+}
+
+.contact-channels__icon--blue {
+  background: oklch(58% 0.16 250deg);
+}
+
+.contact-channels__item-title {
+  margin: 0 0 0.15rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.contact-channels__email {
+  display: inline-block;
+  margin-bottom: 0.15rem;
+  color: var(--brand);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.contact-channels__email:hover {
+  text-decoration: underline;
+}
+
+.contact-channels__desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--contact-muted);
+}
+
+/* ─── Team graphic ─────────────────────────────────── */
+
+.contact-team {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 18rem;
+  padding: var(--space-6) var(--space-4);
+  border-radius: var(--contact-card-radius);
+  background:
+    radial-gradient(circle at 50% 45%, color-mix(in oklab, var(--brand) 14%, transparent), transparent 55%),
+    color-mix(in oklab, var(--brand-soft) 70%, var(--surface));
+  overflow: hidden;
+}
+
+.contact-team__graphic {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.contact-team__globe {
+  position: relative;
+  width: min(16rem, 70vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--brand) 18%, #fff), transparent 45%),
+    color-mix(in oklab, var(--brand-soft) 80%, #fff);
+  opacity: 0.9;
+}
+
+.contact-team__orbit {
+  position: absolute;
+  inset: 12%;
+  border: 1px dashed color-mix(in oklab, var(--brand) 35%, transparent);
+  border-radius: 50%;
+}
+
+.contact-team__orbit--2 {
+  inset: 22%;
+  rotate: 18deg;
+}
+
+.contact-team__orbit--3 {
+  inset: 32%;
+  rotate: -12deg;
+}
+
+.contact-team__dot {
+  position: absolute;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--brand) 55%, #fff);
+}
+
+.contact-team__dot--1 { top: 18%; left: 42%; }
+.contact-team__dot--2 { top: 48%; left: 22%; }
+.contact-team__dot--3 { top: 58%; right: 24%; }
+.contact-team__dot--4 { bottom: 20%; left: 48%; }
+
+.contact-team__avatar {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 3px solid var(--surface);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  z-index: 1;
+}
+
+.contact-team__avatar--tl { top: 18%; left: 18%; }
+.contact-team__avatar--tr { top: 22%; right: 16%; }
+.contact-team__avatar--bl { bottom: 22%; left: 28%; }
+
+.contact-team__card {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  width: min(100%, 18rem);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.contact-team__card-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius);
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.contact-team__card-title {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 750;
+}
+
+.contact-team__card-text {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--contact-muted);
+}
+
+/* ─── FAQ ──────────────────────────────────────────── */
+
+.contact-faq__list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.contact-faq__item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.contact-faq__trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0.95rem 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--contact-ink);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.contact-faq__chevron {
+  flex-shrink: 0;
+  color: var(--contact-muted);
+  transition: transform 0.2s ease;
+}
+
+.contact-faq__chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.contact-faq__panel {
+  padding: 0 1rem 1rem;
+  color: var(--contact-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.contact-faq__panel p {
+  margin: 0;
+}
+
+.contact-faq__help {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--brand-soft);
+}
+
+.contact-faq__help-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius);
+  background: var(--brand);
+  color: var(--brand-foreground);
+}
+
+.contact-faq__help-text {
+  margin: 0;
+  padding-top: 0.2rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--contact-ink);
+}
+
+.contact-faq__help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.contact-faq__help-link:hover {
+  text-decoration: underline;
+}
+
+/* ─── Newsletter ───────────────────────────────────── */
+
+.contact-newsletter {
+  padding-inline: var(--site-gutter);
+  padding-bottom: var(--space-12);
+}
+
+.contact-newsletter__inner {
+  display: grid;
+  gap: var(--space-5);
+  width: min(100%, 72rem);
+  margin-inline: auto;
+  padding: var(--space-6);
+  border-radius: var(--contact-card-radius);
+  background:
+    radial-gradient(ellipse 80% 80% at 10% 0%, color-mix(in oklab, var(--brand) 35%, transparent), transparent 50%),
+    oklch(18% 0.04 285deg);
+  color: #fff;
+  box-shadow: var(--shadow-card);
+}
+
+.contact-newsletter__copy {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.contact-newsletter__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: var(--brand-foreground);
+}
+
+.contact-newsletter__title {
+  margin: 0 0 var(--space-2);
+  font-size: 1.35rem;
+  font-weight: 750;
+}
+
+.contact-newsletter__subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: color-mix(in oklab, #fff 75%, transparent);
+}
+
+.contact-newsletter__form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.contact-newsletter__field {
+  position: relative;
+}
+
+.contact-newsletter__field-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  translate: 0 -50%;
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+
+.contact-newsletter__input {
+  width: 100%;
+  height: 2.85rem;
+  padding-inline: 2.5rem 0.9rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--heading-text);
+  font: inherit;
+}
+
+.contact-newsletter__btn {
+  height: 2.85rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--brand);
+  color: var(--brand-foreground);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  padding-inline: var(--space-4);
+}
+
+.contact-newsletter__btn:hover {
+  opacity: 0.92;
+}
+
+.contact-newsletter__note {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 0.8rem;
+  color: color-mix(in oklab, #fff 70%, transparent);
+}
+
+/* ─── Tablet+ ──────────────────────────────────────── */
+
+@media (min-width: 768px) {
+  .contact-hero {
+    padding-block: var(--space-12) var(--space-10);
+  }
+
+  .contact-hero__inner {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: var(--space-10);
+  }
+
+  .contact-form {
+    padding: var(--space-8);
+  }
+
+  .contact-form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .contact-newsletter__inner {
+    grid-template-columns: 1.2fr 1fr;
+    grid-template-areas:
+      'copy form'
+      'copy note';
+    align-items: center;
+    padding: var(--space-8);
+  }
+
+  .contact-newsletter__copy {
+    grid-area: copy;
+  }
+
+  .contact-newsletter__form {
+    grid-area: form;
+    grid-template-columns: 1fr auto;
+  }
+
+  .contact-newsletter__note {
+    grid-area: note;
+    justify-self: start;
+  }
+}
+
+/* ─── Desktop mid grid ─────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .contact-mid__inner {
+    grid-template-columns: 1fr 1.05fr 1fr;
+    align-items: start;
+    gap: var(--space-8);
+  }
+
+  .contact-channels,
+  .contact-team,
+  .contact-faq {
+    order: initial;
+  }
+
+  .contact-team {
+    min-height: 22rem;
+    align-self: stretch;
+  }
+
+  .contact-newsletter__inner {
+    grid-template-columns: 1.4fr 1fr;
+  }
+}
+
+/* Dark theme tweaks */
+
+[data-theme='dark'] .contact-form,
+[data-theme='dark'] .contact-faq__item,
+[data-theme='dark'] .contact-team__card {
+  background: var(--card);
+}
+
+[data-theme='dark'] .contact-newsletter__inner {
+  background:
+    radial-gradient(ellipse 80% 80% at 10% 0%, color-mix(in oklab, var(--brand) 28%, transparent), transparent 50%),
+    oklch(16% 0.03 285deg);
+}
+
+[data-theme='dark'] .contact-newsletter__input {
+  background: var(--surface);
+  color: var(--foreground);
+}

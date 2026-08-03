@@ -2,30 +2,108 @@ import { getCachedGlobal } from '@/utilities/getGlobals'
 import Link from 'next/link'
 import React from 'react'
 
-import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
+import { resolveFooterData } from './defaults'
+import { NewsletterSignup } from './NewsletterSignup'
+import { SocialLinks } from './SocialLinks'
+
+import './footer.css'
 
 export async function Footer() {
   const footerData = await getCachedGlobal('footer', 1)()
+  const data = resolveFooterData(footerData)
 
-  const navItems = footerData?.navItems || []
+  const quickLinks = data.quickLinks || []
+  const popularPages = data.popularPages || []
+  const socialLinks = data.socialLinks || []
 
   return (
-    <footer className="mt-auto border-t border-border bg-black dark:bg-card text-white">
-      <div className="container py-8 gap-8 flex flex-col md:flex-row md:justify-between">
-        <Link className="flex items-center" href="/">
-          <Logo />
-        </Link>
+    <footer className="site-footer">
+      <div className="site-footer__inner">
+        <div className="site-footer__grid">
+          <div className="site-footer__brand">
+            <Link href="/" className="site-footer__logo" aria-label="TechBlog home">
+              <Logo />
+            </Link>
+            <p className="site-footer__copyright site-footer__desktop-copyright">
+              {data.copyright}
+            </p>
+          </div>
 
-        <div className="flex flex-col-reverse items-start md:flex-row gap-4 md:items-center">
-          <ThemeSelector />
-          <nav className="flex flex-col md:flex-row gap-4">
-            {navItems.map(({ link }, i) => {
-              return <CMSLink className="text-white" key={i} {...link} />
-            })}
-          </nav>
+          <div className="site-footer__columns">
+            <div>
+              <p className="site-footer__col-title">Quick links</p>
+              <ul className="site-footer__links">
+                {quickLinks.map(({ link }, i) => (
+                  <li key={i}>
+                    <CMSLink {...link} appearance="inline" className="site-footer__link" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="site-footer__col-title">Popular pages</p>
+              <ul className="site-footer__links">
+                {popularPages.map(({ link }, i) => (
+                  <li key={i}>
+                    <CMSLink {...link} appearance="inline" className="site-footer__link" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <hr className="site-footer__separator" />
+
+          <div className="site-footer__socials-mobile">
+            <SocialLinks links={socialLinks} />
+          </div>
+
+          <div className="site-footer__aside">
+            <div>
+              <p className="site-footer__col-title">{data.contact?.heading || 'Contact us'}</p>
+              <ul className="site-footer__contact-list">
+                {data.contact?.email ? (
+                  <li>
+                    <a className="site-footer__link" href={`mailto:${data.contact.email}`}>
+                      {data.contact.email}
+                    </a>
+                  </li>
+                ) : null}
+                {data.contact?.phone ? (
+                  <li>
+                    <a className="site-footer__link" href={`tel:${data.contact.phone}`}>
+                      {data.contact.phone}
+                    </a>
+                  </li>
+                ) : null}
+                <li>
+                  <a
+                    className="site-footer__link"
+                    href={
+                      data.contact?.url && data.contact.url !== '#'
+                        ? data.contact.url
+                        : '/contact'
+                    }
+                  >
+                    Contact page
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <NewsletterSignup
+              heading={data.newsletter?.heading}
+              placeholder={data.newsletter?.placeholder}
+              buttonLabel={data.newsletter?.buttonLabel}
+            />
+
+            <SocialLinks links={socialLinks} />
+          </div>
         </div>
+
+        <p className="site-footer__copyright site-footer__mobile-copyright">{data.copyright}</p>
       </div>
     </footer>
   )

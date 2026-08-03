@@ -1,0 +1,7 @@
+export { ContactPage } from './ContactPage'
+export { ContactHero } from './ContactHero'
+export { ContactForm } from './ContactForm'
+export { ContactChannels } from './ContactChannels'
+export { ContactTeam } from './ContactTeam'
+export { ContactFAQ } from './ContactFAQ'
+export { ContactNewsletter } from './ContactNewsletter'

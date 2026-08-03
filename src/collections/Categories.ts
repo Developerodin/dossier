@@ -21,6 +21,18 @@ export const Categories: CollectionConfig = {
       type: 'text',
       required: true,
     },
+    {
+      name: 'description',
+      type: 'textarea',
+    },
+    {
+      name: 'accentColor',
+      type: 'text',
+      defaultValue: '#1B5E3B',
+      admin: {
+        description: 'Hex accent for title and header bar (e.g. #1B5E3B)',
+      },
+    },
     slugField({
       position: undefined,
     }),
