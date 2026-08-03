@@ -64,6 +64,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    // Never push schema from production / CI builds — migrations only.
+    push: false,
     prodMigrations: migrations,
   }),
   collections: [Pages, Posts, Media, Categories, FundingRounds, Users],
