@@ -19,7 +19,8 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className, labeled = f
     setMounted(true)
   }, [])
 
-  const isDark = theme === 'dark'
+  // Stable defaults until mounted so SSR HTML matches the first client render.
+  const isDark = mounted && theme === 'dark'
   const label = isDark ? 'Switch to light mode' : 'Switch to dark mode'
   const toggle = () => setTheme(isDark ? 'light' : 'dark')
 

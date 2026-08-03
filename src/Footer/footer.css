@@ -17,13 +17,11 @@
 .site-footer__logo {
   display: flex;
   align-items: center;
-  line-height: 0;
+  line-height: 1;
 }
 
-.site-footer__logo img,
 .site-footer__logo .site-logo {
   height: var(--logo-height);
-  width: auto;
 }
 
 .site-footer__copyright {

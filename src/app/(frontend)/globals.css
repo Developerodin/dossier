@@ -172,15 +172,16 @@
 }
 
 .site-logo {
+  display: inline-flex;
+  align-items: center;
   height: var(--logo-height);
-  width: auto;
-  max-width: none;
-  display: block;
-  filter: invert(1);
-}
-
-[data-theme='dark'] .site-logo {
-  filter: none;
+  font-size: 1.375rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--foreground);
+  text-transform: lowercase;
+  user-select: none;
 }
 
 [data-theme='dark'] {

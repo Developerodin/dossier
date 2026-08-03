@@ -45,7 +45,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     <>
       <header className="site-header" {...(theme ? { 'data-theme': theme } : {})}>
         <div className="site-header__inner">
-          <Link href="/" className="site-header__logo" aria-label="TechBlog home">
+          <Link href="/" className="site-header__logo" aria-label="dossier home">
             <Logo loading="eager" priority="high" />
           </Link>
 

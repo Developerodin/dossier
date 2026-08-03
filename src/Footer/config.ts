@@ -12,7 +12,7 @@ export const Footer: GlobalConfig = {
     {
       name: 'copyright',
       type: 'text',
-      defaultValue: '© 2026 TechBlog LLC.',
+      defaultValue: '© 2026 dossier.',
       admin: {
         description: 'Shown under the logo on desktop and at the bottom on mobile.',
       },

@@ -136,7 +136,7 @@ export const seed = async ({
     payload.updateGlobal({
       slug: 'footer',
       data: {
-        copyright: '© 2026 TechBlog LLC.',
+        copyright: '© 2026 dossier.',
         quickLinks: [],
         popularPages: [],
         contact: {},
@@ -928,7 +928,7 @@ export const seed = async ({
         disableRevalidate: true,
       },
       data: {
-        copyright: '© 2026 TechBlog LLC.',
+        copyright: '© 2026 dossier.',
         quickLinks: [
           customLink('About'),
           customLink('Contact', '/contact'),
@@ -943,7 +943,7 @@ export const seed = async ({
         ],
         contact: {
           heading: 'Contact us',
-          email: 'hello@techblog.example',
+          email: 'hello@dossier.example',
           phone: '',
           url: '/contact',
         },

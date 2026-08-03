@@ -1,14 +1,12 @@
-import Script from 'next/script'
-import React from 'react'
+'use client'
 
-import { defaultTheme, themeLocalStorageKey } from '../ThemeSelector/types'
+import React, { useSyncExternalStore } from 'react'
 
-export const InitTheme: React.FC = () => {
-  return (
-    // eslint-disable-next-line @next/next/no-before-interactive-script-outside-document
-    <Script
-      dangerouslySetInnerHTML={{
-        __html: `
+import { defaultTheme, themeLocalStorageKey } from '../shared'
+
+const emptySubscribe = () => () => {}
+
+const themeScript = `
   (function () {
     function getImplicitPreference() {
       var mediaQuery = '(prefers-color-scheme: dark)'
@@ -41,10 +39,31 @@ export const InitTheme: React.FC = () => {
 
     document.documentElement.setAttribute('data-theme', themeToSet)
   })();
-  `,
+`
+
+/**
+ * Injects a blocking theme script during SSR + hydration only.
+ * After hydration, renders null so React 19 does not warn about
+ * script tags created during client renders.
+ */
+export const InitTheme: React.FC = () => {
+  const isServerOrHydrating = useSyncExternalStore(
+    emptySubscribe,
+    () => false,
+    () => true,
+  )
+
+  if (!isServerOrHydrating) {
+    return null
+  }
+
+  return (
+    <script
+      dangerouslySetInnerHTML={{
+        __html: themeScript,
       }}
       id="theme-script"
-      strategy="beforeInteractive"
+      suppressHydrationWarning
     />
   )
 }

@@ -1,7 +1,7 @@
 {
   "name": "blogwebapp",
   "version": "1.0.0",
-  "description": "Website template for Payload",
+  "description": "dossier — technology news and startup media portal",
   "license": "MIT",
   "type": "module",
   "scripts": {

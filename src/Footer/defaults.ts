@@ -9,7 +9,7 @@ const customLink = (label: string, url = '#') => ({
 })
 
 export const defaultFooterData: Omit<Footer, 'id' | 'updatedAt' | 'createdAt'> = {
-  copyright: '© 2026 TechBlog LLC.',
+  copyright: '© 2026 dossier.',
   quickLinks: [
     customLink('About'),
     customLink('Contact', '/contact'),
@@ -24,7 +24,7 @@ export const defaultFooterData: Omit<Footer, 'id' | 'updatedAt' | 'createdAt'> =
   ],
   contact: {
     heading: 'Contact us',
-    email: 'hello@techblog.example',
+    email: 'hello@dossier.example',
     phone: '',
     url: '/contact',
   },

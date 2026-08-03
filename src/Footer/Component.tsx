@@ -23,7 +23,7 @@ export async function Footer() {
       <div className="site-footer__inner">
         <div className="site-footer__grid">
           <div className="site-footer__brand">
-            <Link href="/" className="site-footer__logo" aria-label="TechBlog home">
+            <Link href="/" className="site-footer__logo" aria-label="dossier home">
               <Logo />
             </Link>
             <p className="site-footer__copyright site-footer__desktop-copyright">

@@ -8,7 +8,7 @@ const FAQS = [
   {
     question: 'Do you offer advertising or sponsorships?',
     answer:
-      'Yes. We offer sponsored content, newsletter placements, and display partnerships. Reach out via the contact form or partnerships@techblog.example.',
+      'Yes. We offer sponsored content, newsletter placements, and display partnerships. Reach out via the contact form or partnerships@dossier.example.',
   },
   {
     question: 'Can I contribute a guest post?',
@@ -18,7 +18,7 @@ const FAQS = [
   {
     question: 'How can I submit a press release?',
     answer:
-      'Send press materials to press@techblog.example. We typically review media inquiries within 48 hours.',
+      'Send press materials to press@dossier.example. We typically review media inquiries within 48 hours.',
   },
   {
     question: 'Do you have an API?',

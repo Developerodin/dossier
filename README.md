@@ -1,6 +1,6 @@
-# Payload Website Template
+# dossier
 
-This is the official [Payload Website Template](https://github.com/payloadcms/payload/blob/3.x/templates/website). Use it to power websites, blogs, or portfolios from small to enterprise. This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready website.
+Built from the [Payload Website Template](https://github.com/payloadcms/payload/blob/3.x/templates/website). Technology news and startup media portal powered by Payload CMS and Next.js.
 
 This template is right for you if you are working on:
 
