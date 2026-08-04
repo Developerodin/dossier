@@ -3,6 +3,10 @@ import { slugField } from 'payload'
 
 import { authenticated } from '../access/authenticated'
 import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
+import {
+  revalidateFundingRound,
+  revalidateFundingRoundDelete,
+} from '../hooks/revalidateFundingRound'
 
 export const FundingRounds: CollectionConfig = {
   slug: 'funding-rounds',
@@ -121,6 +125,10 @@ export const FundingRounds: CollectionConfig = {
       useAsSlug: 'companyName',
     }),
   ],
+  hooks: {
+    afterChange: [revalidateFundingRound],
+    afterDelete: [revalidateFundingRoundDelete],
+  },
   timestamps: true,
   versions: {
     drafts: true,

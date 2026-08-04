@@ -12,16 +12,19 @@ import { queryExploreCategories } from './queryExploreCategories'
 import { queryFundingNews } from './queryFundingNews'
 import { queryHomePosts } from './queryHomePosts'
 import { queryTrendingPosts } from './queryTrendingPosts'
+import { NEWSLETTER_FORM_TITLE } from '@/utilities/ensureRequiredForms'
+import { queryFormIdByTitle } from '@/utilities/queryFormByTitle'
 
 import './home.css'
 
 export const HomePage: React.FC = async () => {
-  const [{ featured, breaking, latest, editorsPicks }, categories, funding, trending] =
+  const [{ featured, breaking, latest, editorsPicks }, categories, funding, trending, newsletterFormId] =
     await Promise.all([
       queryHomePosts(),
       queryExploreCategories(),
       queryFundingNews(),
       queryTrendingPosts(),
+      queryFormIdByTitle(NEWSLETTER_FORM_TITLE)(),
     ])
 
   return (
@@ -32,7 +35,7 @@ export const HomePage: React.FC = async () => {
       {editorsPicks.length > 0 && <EditorsPicks posts={editorsPicks} />}
       <FundingNews settings={funding.settings} rounds={funding.rounds} />
       <ExploreTopics categories={categories} />
-      <NewsletterSection />
+      <NewsletterSection formId={newsletterFormId} />
       {latest.length > 0 && <LatestArticles posts={latest} />}
     </div>
   )

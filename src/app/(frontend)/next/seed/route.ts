@@ -6,6 +6,11 @@ import { headers } from 'next/headers'
 export const maxDuration = 60 // This function can run for a maximum of 60 seconds
 
 export async function POST(): Promise<Response> {
+  // Production safety: seeding wipes collections. Opt in explicitly.
+  if (process.env.ALLOW_SEED !== 'true') {
+    return new Response('Seeding is disabled. Set ALLOW_SEED=true to enable.', { status: 403 })
+  }
+
   const payload = await getPayload({ config })
   const requestHeaders = await headers()
 

@@ -6,6 +6,7 @@ import { searchPlugin } from '@payloadcms/plugin-search'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { Plugin } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
+import { revalidateForms, revalidateFormsDelete } from '@/hooks/revalidateForms'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
@@ -79,6 +80,16 @@ export const plugins: Plugin[] = [
           return field
         })
       },
+      hooks: {
+        afterChange: [revalidateForms],
+        afterDelete: [revalidateFormsDelete],
+      },
+    },
+    formSubmissionOverrides: {
+      admin: {
+        defaultColumns: ['form', 'createdAt'],
+        useAsTitle: 'id',
+      },
     },
   }),
   searchPlugin({
@@ -95,9 +106,13 @@ export const plugins: Plugin[] = [
   (incomingConfig) =>
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-      addRandomSuffix: false,
+      // Unique filenames so re-uploads never collide on Blob.
+      addRandomSuffix: true,
+      // Browser uploads straight to Blob (bypasses Vercel's ~4.5MB body cap).
+      clientUploads: true,
       collections: {
-        media: true,
+        // Adapter regenerates CDN URLs from filename on every read.
+        media: { disablePayloadAccessControl: true },
       },
       token: process.env.BLOB_READ_WRITE_TOKEN || '',
     })(incomingConfig),

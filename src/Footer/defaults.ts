@@ -81,6 +81,7 @@ export function resolveFooterData(data: Footer | null | undefined): Footer {
       heading: data?.newsletter?.heading || defaultFooterData.newsletter?.heading,
       placeholder: data?.newsletter?.placeholder || defaultFooterData.newsletter?.placeholder,
       buttonLabel: data?.newsletter?.buttonLabel || defaultFooterData.newsletter?.buttonLabel,
+      form: data?.newsletter?.form ?? defaultFooterData.newsletter?.form ?? null,
     },
     socialLinks: data?.socialLinks?.length ? data.socialLinks : defaultFooterData.socialLinks,
     updatedAt: data?.updatedAt,

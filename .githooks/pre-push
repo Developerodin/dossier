@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# Fail the push early if types or lint are broken (catches Vercel build failures locally).
+set -e
+cd "$(dirname "$0")/.."
+pnpm check

@@ -7,6 +7,8 @@ import './index.scss'
 const baseClass = 'before-dashboard'
 
 const BeforeDashboard: React.FC = () => {
+  const allowSeed = process.env.ALLOW_SEED === 'true'
+
   return (
     <div className={baseClass}>
       <Banner className={`${baseClass}__banner`} type="success">
@@ -14,14 +16,16 @@ const BeforeDashboard: React.FC = () => {
       </Banner>
       Here&apos;s what to do next:
       <ul className={`${baseClass}__instructions`}>
-        <li>
-          <SeedButton />
-          {' with a few pages, posts, and projects to jump-start your new site, then '}
-          <a href="/" target="_blank">
-            visit your website
-          </a>
-          {' to see the results.'}
-        </li>
+        {allowSeed && (
+          <li>
+            <SeedButton />
+            {' with a few pages, posts, and projects to jump-start your new site, then '}
+            <a href="/" target="_blank">
+              visit your website
+            </a>
+            {' to see the results.'}
+          </li>
+        )}
         <li>
           {'Modify your '}
           <a

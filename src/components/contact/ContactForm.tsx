@@ -1,6 +1,6 @@
 'use client'
 
-import { getClientSideURL } from '@/utilities/getURL'
+import { submitFormSubmission } from '@/utilities/submitFormSubmission'
 import { ChevronDown, Send, User } from 'lucide-react'
 import Link from 'next/link'
 import React, { FormEvent, useState } from 'react'
@@ -52,20 +52,10 @@ export const ContactForm: React.FC<ContactFormProps> = ({ formId }) => {
     setIsLoading(true)
 
     try {
-      const req = await fetch(`${getClientSideURL()}/api/form-submissions`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          form: formId,
-          submissionData,
-        }),
-      })
+      const result = await submitFormSubmission({ formId, submissionData })
 
-      const res = await req.json()
-
-      if (req.status >= 400) {
-        setError(res.errors?.[0]?.message || 'Something went wrong. Please try again.')
-        setIsLoading(false)
+      if (!result.ok) {
+        setError(result.message)
         return
       }
 

@@ -224,12 +224,18 @@ That's it! The Docker instance will help you get up and running quickly while al
 
 ### Seed
 
-To seed the database with a few pages, posts, and projects you can click the 'seed database' link from the admin panel.
+Seeding is disabled by default (it wipes collections). To enable it locally:
+
+1. Set `ALLOW_SEED=true` in `.env.local`
+2. Restart `pnpm dev`
+3. Click **Seed your database** in the admin dashboard (or `POST /next/seed` while logged in)
+
+Leave `ALLOW_SEED` unset in production.
 
 The seed script will also create a demo user for demonstration purposes only:
 
 - Demo Author
-  - Email: `demo-author@payloadcms.com`
+  - Email: `demo-author@example.com`
   - Password: `password`
 
 > NOTICE: seeding the database is destructive because it drops your current database to populate a fresh one from the seed template. Only run this command if you are starting a new project or can afford to lose your current data.
@@ -242,52 +248,61 @@ To run Payload in production, you need to build and start the Admin panel. To do
 1. Finally run `pnpm start` or `npm run start` to run Node in production and serve Payload from the `.build` directory.
 1. When you're ready to go live, see Deployment below for more details.
 
+### Deploy runbook (Vercel)
+
+Required environment variables (Production + Preview + Development):
+
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL` | Neon / Postgres connection string |
+| `PAYLOAD_SECRET` | Encrypts JWTs |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob store (media uploads) |
+| `NEXT_PUBLIC_SERVER_URL` | Public site origin, no trailing slash |
+| `CRON_SECRET` | Auth for cron / jobs endpoints |
+| `PREVIEW_SECRET` | Draft preview validation |
+
+Do **not** set `ALLOW_SEED` in production.
+
+Media is owned by `@payloadcms/storage-vercel-blob` (`clientUploads`, `addRandomSuffix`, `disablePayloadAccessControl`). Uploads go from the browser straight to Blob; Payload regenerates CDN URLs from filenames on every read. Local and production should share the same `BLOB_READ_WRITE_TOKEN` so images match.
+
+If older media rows exist in the DB but the files are missing from Blob (homepage images 404), upload local `public/media` files once:
+
+```bash
+pnpm sync:media
+```
+
+This only uploads files by filename. It does not patch URL columns — the adapter regenerates CDN URLs on read.
+
+Before pushing:
+
+```bash
+pnpm check          # typecheck + lint
+git config core.hooksPath .githooks   # one-time; runs pnpm check on pre-push
+```
+
+When the schema changes:
+
+```bash
+pnpm payload migrate:create
+# review the generated migration, then:
+pnpm migrate:prod
+# or against production env:
+pnpm dlx vercel env run -e production -- pnpm migrate:prod
+```
+
+`migrate:prod` deletes any leftover `batch = -1` "dev mode" markers first, then runs migrations. Never leave `push: true` on in production — that marker is what hung earlier Vercel builds.
+
+If a build hangs on "It looks like you've run Payload in dev mode…":
+
+```bash
+pnpm dlx vercel env run -e production -- node --import=tsx/esm scripts/clear-dev-migrations.ts
+```
+
+Then redeploy.
+
 ### Deploying to Vercel
 
-This template can also be deployed to Vercel for free. You can get started by choosing the Vercel DB adapter during the setup of the template or by manually installing and configuring it:
-
-```bash
-pnpm add @payloadcms/db-vercel-postgres
-```
-
-```ts
-// payload.config.ts
-import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
-
-export default buildConfig({
-  // ...
-  db: vercelPostgresAdapter({
-    pool: {
-      connectionString: process.env.POSTGRES_URL || '',
-    },
-  }),
-  // ...
-```
-
-We also support Vercel's blob storage:
-
-```bash
-pnpm add @payloadcms/storage-vercel-blob
-```
-
-```ts
-// payload.config.ts
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
-
-export default buildConfig({
-  // ...
-  plugins: [
-    vercelBlobStorage({
-      collections: {
-        [Media.slug]: true,
-      },
-      token: process.env.BLOB_READ_WRITE_TOKEN || '',
-    }),
-  ],
-  // ...
-```
-
-There is also a simplified [one click deploy](https://github.com/payloadcms/payload/tree/3.x/templates/with-vercel-postgres) to Vercel should you need it.
+This project uses Postgres (`@payloadcms/db-postgres`) and Vercel Blob (`@payloadcms/storage-vercel-blob`), already wired in `src/payload.config.ts` and `src/plugins/index.ts`. Push to `main` to deploy; keep the Vercel Build Command as `pnpm run build` (migrations are manual via `pnpm migrate:prod`).
 
 ### Self-hosting
 

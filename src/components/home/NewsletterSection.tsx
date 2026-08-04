@@ -1,6 +1,7 @@
 'use client'
 
-import React, { FormEvent } from 'react'
+import { submitFormSubmission } from '@/utilities/submitFormSubmission'
+import React, { FormEvent, useState } from 'react'
 
 const AVATARS = [
   { initials: 'AK' },
@@ -9,9 +10,53 @@ const AVATARS = [
   { initials: 'TL' },
 ] as const
 
-export const NewsletterSection: React.FC = () => {
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+type NewsletterSectionProps = {
+  formId?: string | number | null
+}
+
+export const NewsletterSection: React.FC<NewsletterSectionProps> = ({ formId }) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setError(null)
+
+    if (!formId) {
+      setError('Newsletter signup is not configured yet. Please try again later.')
+      return
+    }
+
+    const form = event.currentTarget
+    const data = new FormData(form)
+    const email = String(data.get('email') || '').trim()
+
+    if (!email) {
+      setError('Please enter your email address.')
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      const result = await submitFormSubmission({
+        formId,
+        submissionData: [{ field: 'email', value: email }],
+      })
+
+      if (!result.ok) {
+        setError(result.message)
+        return
+      }
+
+      setHasSubmitted(true)
+      form.reset()
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -58,41 +103,54 @@ export const NewsletterSection: React.FC = () => {
         </div>
 
         <div className="home-newsletter__action">
-          <form className="home-newsletter__form" action="#" onSubmit={onSubmit}>
-            <label htmlFor="home-newsletter-email" className="sr-only">
-              Email
-            </label>
-            <div className="home-newsletter__field">
-              <svg
-                className="home-newsletter__field-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <rect x="3.5" y="6.5" width="17" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
-                <path
-                  d="M4 8.5L12 13.5L20 8.5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+          {hasSubmitted ? (
+            <p className="home-newsletter__proof-text" role="status">
+              Thanks — you&apos;re subscribed.
+            </p>
+          ) : (
+            <form className="home-newsletter__form" onSubmit={onSubmit}>
+              <label htmlFor="home-newsletter-email" className="sr-only">
+                Email
+              </label>
+              <div className="home-newsletter__field">
+                <svg
+                  className="home-newsletter__field-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <rect x="3.5" y="6.5" width="17" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                  <path
+                    d="M4 8.5L12 13.5L20 8.5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <input
+                  id="home-newsletter-email"
+                  className="home-newsletter__input"
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  autoComplete="email"
+                  required
+                  disabled={isLoading}
                 />
-              </svg>
-              <input
-                id="home-newsletter-email"
-                className="home-newsletter__input"
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                autoComplete="email"
-                required
-              />
-            </div>
-            <button type="submit" className="home-newsletter__btn">
-              Subscribe
-            </button>
-          </form>
+              </div>
+              <button type="submit" className="home-newsletter__btn" disabled={isLoading}>
+                {isLoading ? 'Subscribing...' : 'Subscribe'}
+              </button>
+            </form>
+          )}
+
+          {error ? (
+            <p className="home-newsletter__proof-text" role="alert">
+              {error}
+            </p>
+          ) : null}
 
           <div className="home-newsletter__proof">
             <ul className="home-newsletter__avatars" aria-hidden="true">

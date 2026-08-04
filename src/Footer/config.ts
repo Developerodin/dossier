@@ -95,6 +95,14 @@ export const Footer: GlobalConfig = {
           type: 'text',
           defaultValue: 'Subscribe',
         },
+        {
+          name: 'form',
+          type: 'relationship',
+          relationTo: 'forms',
+          admin: {
+            description: 'Form Builder form that receives newsletter signups (Form Submissions).',
+          },
+        },
       ],
     },
     {

@@ -2,6 +2,7 @@ import { getCachedGlobal } from '@/utilities/getGlobals'
 import Link from 'next/link'
 import React from 'react'
 
+import type { Form } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { resolveFooterData } from './defaults'
@@ -10,6 +11,14 @@ import { SocialLinks } from './SocialLinks'
 
 import './footer.css'
 
+function resolveNewsletterFormId(
+  form: number | Form | null | undefined,
+): number | string | null {
+  if (form == null) return null
+  if (typeof form === 'object') return form.id
+  return form
+}
+
 export async function Footer() {
   const footerData = await getCachedGlobal('footer', 1)()
   const data = resolveFooterData(footerData)
@@ -17,6 +26,7 @@ export async function Footer() {
   const quickLinks = data.quickLinks || []
   const popularPages = data.popularPages || []
   const socialLinks = data.socialLinks || []
+  const newsletterFormId = resolveNewsletterFormId(data.newsletter?.form)
 
   return (
     <footer className="site-footer">
@@ -94,6 +104,7 @@ export async function Footer() {
             </div>
 
             <NewsletterSignup
+              formId={newsletterFormId}
               heading={data.newsletter?.heading}
               placeholder={data.newsletter?.placeholder}
               buttonLabel={data.newsletter?.buttonLabel}

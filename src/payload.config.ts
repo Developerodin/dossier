@@ -16,6 +16,8 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import { ensureRequiredForms } from './utilities/ensureRequiredForms'
+import { resetHiddenFormSubmissionColumnPrefs } from './utilities/resetHiddenFormSubmissionColumnPrefs'
 import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
@@ -80,6 +82,22 @@ export default buildConfig({
   sharp,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+  onInit: async (payload) => {
+    try {
+      await ensureRequiredForms(payload)
+    } catch (err) {
+      payload.logger.error({ err, msg: 'Failed to ensure required forms on init' })
+    }
+
+    try {
+      await resetHiddenFormSubmissionColumnPrefs(payload)
+    } catch (err) {
+      payload.logger.error({
+        err,
+        msg: 'Failed to reset hidden Form Submissions column preferences on init',
+      })
+    }
   },
   jobs: {
     access: {

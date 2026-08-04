@@ -1867,6 +1867,10 @@ export interface Footer {
     heading?: string | null;
     placeholder?: string | null;
     buttonLabel?: string | null;
+    /**
+     * Form Builder form that receives newsletter signups (Form Submissions).
+     */
+    form?: (number | null) | Form;
   };
   socialLinks?:
     | {
@@ -1993,6 +1997,7 @@ export interface FooterSelect<T extends boolean = true> {
         heading?: T;
         placeholder?: T;
         buttonLabel?: T;
+        form?: T;
       };
   socialLinks?:
     | T

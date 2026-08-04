@@ -1,6 +1,9 @@
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import React, { cache } from 'react'
+import {
+  CONTACT_FORM_TITLE,
+  NEWSLETTER_FORM_TITLE,
+} from '@/utilities/ensureRequiredForms'
+import { queryFormIdByTitle } from '@/utilities/queryFormByTitle'
+import React from 'react'
 
 import { ContactChannels } from './ContactChannels'
 import { ContactFAQ } from './ContactFAQ'
@@ -11,26 +14,11 @@ import { ContactTeam } from './ContactTeam'
 
 import './contact.css'
 
-const queryContactFormId = cache(async () => {
-  const payload = await getPayload({ config: configPromise })
-
-  const result = await payload.find({
-    collection: 'forms',
-    limit: 1,
-    pagination: false,
-    depth: 0,
-    where: {
-      title: {
-        equals: 'Contact Form',
-      },
-    },
-  })
-
-  return result.docs?.[0]?.id ?? null
-})
-
 export const ContactPage: React.FC = async () => {
-  const formId = await queryContactFormId()
+  const [formId, newsletterFormId] = await Promise.all([
+    queryFormIdByTitle(CONTACT_FORM_TITLE)(),
+    queryFormIdByTitle(NEWSLETTER_FORM_TITLE)(),
+  ])
 
   return (
     <div className="contact-page">
@@ -49,7 +37,7 @@ export const ContactPage: React.FC = async () => {
         </div>
       </section>
 
-      <ContactNewsletter />
+      <ContactNewsletter formId={newsletterFormId} />
     </div>
   )
 }

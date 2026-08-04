@@ -3,7 +3,10 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import type { Media } from '@/payload-types'
+
 import { contactForm as contactFormData } from './contact-form'
+import { newsletterForm as newsletterFormData } from './newsletter-form'
 import { contact as contactPageData } from './contact-page'
 import { home } from './home'
 import { createSeedPost } from './home-posts'
@@ -771,6 +774,20 @@ export const seed = async ({
     collection: 'forms',
     depth: 0,
     data: contactFormData,
+    context: {
+      disableRevalidate: true,
+    },
+  })
+
+  payload.logger.info(`— Seeding newsletter form...`)
+
+  const newsletterForm = await payload.create({
+    collection: 'forms',
+    depth: 0,
+    data: newsletterFormData,
+    context: {
+      disableRevalidate: true,
+    },
   })
 
   payload.logger.info(`— Seeding pages...`)
@@ -837,7 +854,7 @@ export const seed = async ({
         return [key, doc.id] as const
       }),
     ),
-  ) as Record<(typeof fundingLogoFiles)[number]['key'], number | string>
+  ) as Record<(typeof fundingLogoFiles)[number]['key'], Media['id']>
 
   const fundingRoundsSeed = [
     {
@@ -1013,6 +1030,7 @@ export const seed = async ({
           heading: 'Newsletter',
           placeholder: 'Your email',
           buttonLabel: 'Subscribe',
+          form: newsletterForm.id,
         },
         socialLinks: [
           { platform: 'x', url: '#' },
