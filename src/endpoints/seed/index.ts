@@ -1,4 +1,7 @@
 import type { CollectionSlug, Payload, PayloadRequest, File } from 'payload'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 import { contactForm as contactFormData } from './contact-form'
 import { contact as contactPageData } from './contact-page'
@@ -793,10 +796,54 @@ export const seed = async ({
 
   payload.logger.info(`— Seeding funding rounds...`)
 
+  const logosDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public/funding-logos')
+
+  const readLocalLogo = (filename: string): File => {
+    const filePath = path.join(logosDir, filename)
+    const data = fs.readFileSync(filePath)
+    return {
+      name: filename,
+      data,
+      mimetype: 'image/png',
+      size: data.byteLength,
+    }
+  }
+
+  const fundingLogoFiles = [
+    { key: 'xai', file: 'xai.png', alt: 'xAI logo' },
+    { key: 'wayve', file: 'wayve.png', alt: 'Wayve logo' },
+    { key: 'harvey', file: 'harvey.png', alt: 'Harvey logo' },
+    { key: 'decagon', file: 'decagon.png', alt: 'Decagon logo' },
+    { key: 'a16z', file: 'a16z.png', alt: 'a16z logo' },
+    { key: 'sequoia', file: 'sequoia.png', alt: 'Sequoia logo' },
+    { key: 'valor', file: 'valor.png', alt: 'Valor Equity Partners logo' },
+    { key: 'softbank', file: 'softbank.png', alt: 'SoftBank logo' },
+    { key: 'nvidia', file: 'nvidia.png', alt: 'NVIDIA logo' },
+    { key: 'microsoft', file: 'microsoft.png', alt: 'Microsoft logo' },
+    { key: 'openai', file: 'openai.png', alt: 'OpenAI logo' },
+    { key: 'gv', file: 'gv.png', alt: 'GV logo' },
+    { key: 'accel', file: 'accel.png', alt: 'Accel logo' },
+    { key: 'index', file: 'index.png', alt: 'Index Ventures logo' },
+  ] as const
+
+  const fundingLogoDocs = Object.fromEntries(
+    await Promise.all(
+      fundingLogoFiles.map(async ({ key, file, alt }) => {
+        const doc = await payload.create({
+          collection: 'media',
+          data: placeholderMedia(alt),
+          file: readLocalLogo(file),
+        })
+        return [key, doc.id] as const
+      }),
+    ),
+  ) as Record<(typeof fundingLogoFiles)[number]['key'], number | string>
+
   const fundingRoundsSeed = [
     {
       companyName: 'xAI',
       slug: 'xai',
+      logo: fundingLogoDocs.xai,
       series: 'series-b' as const,
       amount: '$6B',
       amountValue: 6,
@@ -804,43 +851,58 @@ export const seed = async ({
       announcedAt: hoursAgo(2),
       topDeal: true,
       investors: [
-        { name: 'a16z' },
-        { name: 'SEQUOIA' },
-        { name: 'VALOR EQUITY PARTNERS' },
+        { name: 'a16z', logo: fundingLogoDocs.a16z },
+        { name: 'SEQUOIA', logo: fundingLogoDocs.sequoia },
+        { name: 'VALOR EQUITY PARTNERS', logo: fundingLogoDocs.valor },
       ],
     },
     {
       companyName: 'Wayve',
       slug: 'wayve',
+      logo: fundingLogoDocs.wayve,
       series: 'series-c' as const,
       amount: '$1.05B',
       amountValue: 1.05,
       sector: 'Autonomous Driving',
       announcedAt: hoursAgo(5),
       topDeal: false,
-      investors: [{ name: 'SOFTBANK' }, { name: 'NVIDIA' }, { name: 'MICROSOFT' }],
+      investors: [
+        { name: 'SOFTBANK', logo: fundingLogoDocs.softbank },
+        { name: 'NVIDIA', logo: fundingLogoDocs.nvidia },
+        { name: 'MICROSOFT', logo: fundingLogoDocs.microsoft },
+      ],
     },
     {
       companyName: 'Harvey',
       slug: 'harvey',
+      logo: fundingLogoDocs.harvey,
       series: 'series-d' as const,
       amount: '$300M',
       amountValue: 0.3,
       sector: 'Legal Tech',
       announcedAt: hoursAgo(8),
       topDeal: false,
-      investors: [{ name: 'OPENAI' }, { name: 'GV' }, { name: 'SEQUOIA' }],
+      investors: [
+        { name: 'OPENAI', logo: fundingLogoDocs.openai },
+        { name: 'GV', logo: fundingLogoDocs.gv },
+        { name: 'SEQUOIA', logo: fundingLogoDocs.sequoia },
+      ],
     },
     {
       companyName: 'Decagon',
       slug: 'decagon',
+      logo: fundingLogoDocs.decagon,
       series: 'series-c' as const,
       amount: '$131M',
       amountValue: 0.131,
       sector: 'Customer Support AI',
       announcedAt: hoursAgo(12),
       topDeal: false,
-      investors: [{ name: 'ACCEL' }, { name: 'A16Z' }, { name: 'INDEX' }],
+      investors: [
+        { name: 'ACCEL', logo: fundingLogoDocs.accel },
+        { name: 'A16Z', logo: fundingLogoDocs.a16z },
+        { name: 'INDEX', logo: fundingLogoDocs.index },
+      ],
     },
   ]
 

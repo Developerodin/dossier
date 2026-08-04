@@ -64,9 +64,13 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
-    // Never push schema from production / CI builds — migrations only.
+    // Never push schema from production / CI builds.
     push: false,
-    prodMigrations: migrations,
+    // Do NOT auto-run migrations during `next build` — a leftover batch=-1
+    // "dev" marker makes Payload prompt interactively and hangs Vercel forever.
+    // Run migrations manually when needed: `pnpm payload migrate`
+    // To opt back in on CI: set PAYLOAD_RUN_PROD_MIGRATIONS=true
+    ...(process.env.PAYLOAD_RUN_PROD_MIGRATIONS === 'true' ? { prodMigrations: migrations } : {}),
   }),
   collections: [Pages, Posts, Media, Categories, FundingRounds, Users],
   cors: [getServerSideURL()].filter(Boolean),

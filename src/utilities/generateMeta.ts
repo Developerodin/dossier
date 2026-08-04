@@ -7,7 +7,7 @@ import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
 
 const toAbsoluteMediaUrl = (pathOrUrl: string | null | undefined, serverUrl: string) => {
-  if (!pathOrUrl) return `${serverUrl}/website-template-OG.webp`
+  if (!pathOrUrl) return `${serverUrl}/dossier-OG.webp`
   const resolved = getMediaUrl(pathOrUrl)
   if (/^https?:\/\//i.test(resolved)) return resolved
   return `${serverUrl}${resolved.startsWith('/') ? '' : '/'}${resolved}`
@@ -16,7 +16,7 @@ const toAbsoluteMediaUrl = (pathOrUrl: string | null | undefined, serverUrl: str
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
 
-  let url = toAbsoluteMediaUrl('/website-template-OG.webp', serverUrl)
+  let url = toAbsoluteMediaUrl('/dossier-OG.webp', serverUrl)
 
   if (image && typeof image === 'object' && 'url' in image) {
     const ogUrl = image.sizes?.og?.url

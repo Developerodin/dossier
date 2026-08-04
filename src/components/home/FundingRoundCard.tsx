@@ -4,6 +4,7 @@ import { Bookmark, Zap } from 'lucide-react'
 import { Media } from '@/components/Media'
 import type { FundingRound, Media as MediaType } from '@/payload-types'
 
+import { companyPlaceholderLogo, investorPlaceholderLogo } from './fundingLogos'
 import { formatRelativeTime, formatSeriesLabel } from './fundingUtils'
 import { FundingSparkline } from './FundingSparkline'
 
@@ -30,6 +31,9 @@ function companyInitials(name: string): string {
 export const FundingRoundCard: React.FC<FundingRoundCardProps> = ({ round }) => {
   const isTopDeal = Boolean(round.topDeal)
   const logo = typeof round.logo === 'object' && round.logo !== null ? (round.logo as MediaType) : null
+  const placeholderLogo =
+    companyPlaceholderLogo(typeof round.slug === 'string' ? round.slug : null) ??
+    companyPlaceholderLogo(round.companyName)
   const relative = formatRelativeTime(round.announcedAt)
   const seriesLabel = formatSeriesLabel(round.series)
 
@@ -63,6 +67,16 @@ export const FundingRoundCard: React.FC<FundingRoundCardProps> = ({ round }) => 
         <div className="home-funding-card__logo">
           {logo ? (
             <Media resource={logo} imgClassName="home-funding-card__logo-img" />
+          ) : placeholderLogo ? (
+            // eslint-disable-next-line @next/next/no-img-element -- static public placeholder
+            <img
+              src={placeholderLogo}
+              alt=""
+              className="home-funding-card__logo-img"
+              width={40}
+              height={40}
+              aria-hidden="true"
+            />
           ) : (
             <span className="home-funding-card__logo-fallback" aria-hidden="true">
               {companyInitials(round.companyName)}
@@ -92,6 +106,7 @@ export const FundingRoundCard: React.FC<FundingRoundCardProps> = ({ round }) => 
                 typeof investor.logo === 'object' && investor.logo !== null
                   ? (investor.logo as MediaType)
                   : null
+              const investorPlaceholder = investorPlaceholderLogo(investor.name)
 
               return (
                 <li key={investor.id ?? `${investor.name}-${index}`} className="home-funding-card__investor">
@@ -100,6 +115,15 @@ export const FundingRoundCard: React.FC<FundingRoundCardProps> = ({ round }) => 
                       resource={investorLogo}
                       imgClassName="home-funding-card__investor-img"
                       htmlElement={null}
+                    />
+                  ) : investorPlaceholder ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- static public placeholder
+                    <img
+                      src={investorPlaceholder}
+                      alt={investor.name}
+                      className="home-funding-card__investor-img"
+                      width={56}
+                      height={14}
                     />
                   ) : (
                     <span className="home-funding-card__investor-name">{investor.name}</span>

@@ -650,7 +650,7 @@ a.home-category:hover {
   grid-template-columns: 5.5rem minmax(0, 1fr);
   gap: var(--space-3);
   padding: var(--space-3);
-  align-items: stretch;
+  align-items: start;
 }
 
 .home-trending-card--desktop {
@@ -672,9 +672,8 @@ a.home-category:hover {
 }
 
 .home-trending-card--mobile .home-trending-card__media {
+  width: 100%;
   aspect-ratio: 1;
-  align-self: stretch;
-  min-height: 5.5rem;
 }
 
 .home-trending-card--desktop .home-trending-card__media {
@@ -1038,8 +1037,8 @@ a.home-category:hover {
 
 .home-explore__grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
 }
 
 .home-explore-card {
@@ -1047,9 +1046,9 @@ a.home-category:hover {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
   min-width: 0;
-  padding: var(--space-5);
+  padding: var(--space-3);
   overflow: hidden;
   isolation: isolate;
   border: 1px solid color-mix(in oklab, var(--topic-accent) 28%, var(--border));
@@ -1957,6 +1956,10 @@ a.home-category:hover {
 
 .home-editors-card__category {
   color: color-mix(in oklab, var(--brand) 70%, white) !important;
+  text-shadow:
+    0 1px 2px oklch(0% 0 0deg / 0.9),
+    0 0 12px oklch(0% 0 0deg / 0.7),
+    0 0 24px oklch(0% 0 0deg / 0.45);
 }
 
 .home-editors-card__title {
@@ -1965,6 +1968,10 @@ a.home-category:hover {
   font-weight: 700;
   line-height: 1.35;
   color: oklch(100% 0 0deg);
+  text-shadow:
+    0 1px 2px oklch(0% 0 0deg / 0.9),
+    0 0 12px oklch(0% 0 0deg / 0.7),
+    0 0 24px oklch(0% 0 0deg / 0.45);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -1989,6 +1996,10 @@ a.home-category:hover {
   margin: 0;
   font-size: 0.75rem;
   color: oklch(100% 0 0deg / 0.7);
+  text-shadow:
+    0 1px 2px oklch(0% 0 0deg / 0.9),
+    0 0 12px oklch(0% 0 0deg / 0.7),
+    0 0 24px oklch(0% 0 0deg / 0.45);
 }
 
 /* Footer bar */
@@ -2072,7 +2083,6 @@ a.home-category:hover {
 
 .home-funding {
   width: 100%;
-  padding-block: var(--space-6);
 }
 
 .home-funding__inner {
@@ -2286,8 +2296,9 @@ a.home-category:hover {
   flex-shrink: 0;
   border-radius: var(--radius);
   overflow: hidden;
-  background: var(--heading-text);
-  color: var(--surface);
+  background: var(--surface-muted);
+  color: var(--heading-text);
+  border: 1px solid color-mix(in srgb, var(--heading-text) 8%, transparent);
 }
 
 .home-funding-card__logo > * {
@@ -2298,13 +2309,19 @@ a.home-category:hover {
 .home-funding-card__logo-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 0.25rem;
+  background: var(--surface);
 }
 
 .home-funding-card__logo-fallback {
+  display: grid;
+  place-items: center;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+  background: var(--heading-text);
+  color: var(--surface);
 }
 
 .home-funding-card__identity {
@@ -2395,12 +2412,12 @@ a.home-category:hover {
 }
 
 .home-funding-card__investor-img {
-  height: 0.875rem;
+  height: 1rem;
   width: auto;
   max-width: 3.5rem;
   object-fit: contain;
   filter: grayscale(1);
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
 .home-funding-card__meta {
@@ -2515,8 +2532,13 @@ a.home-category:hover {
   }
 
   .home-explore__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-4);
+  }
+
+  .home-explore-card {
+    gap: var(--space-3);
+    padding: var(--space-5);
   }
 
   .home-explore__search {

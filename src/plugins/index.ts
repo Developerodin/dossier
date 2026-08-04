@@ -95,7 +95,7 @@ export const plugins: Plugin[] = [
   (incomingConfig) =>
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-      addRandomSuffix: true,
+      addRandomSuffix: false,
       collections: {
         media: true,
       },
