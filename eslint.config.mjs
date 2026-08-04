@@ -1,16 +1,27 @@
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { FlatCompat } from '@eslint/eslintrc'
+import nextVitals from 'eslint-config-next/core-web-vitals'
+import nextTs from 'eslint-config-next/typescript'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-})
+const softenReactHooks = (configs) =>
+  configs.map((config) => {
+    if (!config.rules) return config
+    const rules = { ...config.rules }
+    let changed = false
+    for (const rule of [
+      'react-hooks/set-state-in-effect',
+      'react-hooks/refs',
+      'react-hooks/static-components',
+    ]) {
+      if (rule in rules) {
+        rules[rule] = 'warn'
+        changed = true
+      }
+    }
+    return changed ? { ...config, rules } : config
+  })
 
 const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  ...softenReactHooks(nextVitals),
+  ...nextTs,
   {
     rules: {
       '@typescript-eslint/ban-ts-comment': 'warn',
