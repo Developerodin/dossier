@@ -2,15 +2,22 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-// Load env BEFORE importing Payload config so the Blob plugin sees the token.
+// Load env BEFORE importing Payload config so the S3 plugin sees credentials.
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(dirname, '..')
 dotenv.config({ path: path.resolve(root, '.env.local') })
 dotenv.config({ path: path.resolve(root, '.env') })
 
-if (!process.env.BLOB_READ_WRITE_TOKEN) {
+const s3Ready = Boolean(
+  process.env.S3_BUCKET &&
+    process.env.S3_REGION &&
+    process.env.S3_ACCESS_KEY_ID &&
+    process.env.S3_SECRET_ACCESS_KEY,
+)
+
+if (!s3Ready) {
   console.error(
-    'BLOB_READ_WRITE_TOKEN is missing. Create a Vercel Blob store and pull env vars before seeding.',
+    'S3 env vars are missing. Set S3_BUCKET, S3_REGION, S3_ACCESS_KEY_ID, and S3_SECRET_ACCESS_KEY before seeding.',
   )
   process.exit(1)
 }
@@ -27,18 +34,17 @@ async function main() {
   const sample = await payload.find({ collection: 'media', limit: 1, depth: 0 })
   const url = sample.docs[0]?.url || ''
   const filename = sample.docs[0]?.filename || ''
-  const looksLikeBlobProxy =
-    /blob\.vercel-storage\.com/.test(url) ||
-    // Vercel Blob addRandomSuffix leaves a long alphanumeric token in the filename
-    /-[A-Za-z0-9]{20,}\.(jpe?g|png|webp|gif)$/i.test(filename) ||
-    /-[A-Za-z0-9]{20,}\.(jpe?g|png|webp|gif)$/i.test(url)
+  const looksLikeS3 =
+    /amazonaws\.com/.test(url) ||
+    (process.env.S3_PUBLIC_URL && url.startsWith(process.env.S3_PUBLIC_URL)) ||
+    /\.cloudfront\.net/.test(url)
 
-  if (!looksLikeBlobProxy) {
-    console.error('Seed finished but media does not look Blob-backed:', { url, filename })
+  if (!looksLikeS3) {
+    console.error('Seed finished but media does not look S3-backed:', { url, filename })
     process.exit(1)
   }
 
-  payload.logger.info(`Blob media OK: ${url}`)
+  payload.logger.info(`S3 media OK: ${url}`)
   payload.logger.info('Seed finished.')
   process.exit(0)
 }

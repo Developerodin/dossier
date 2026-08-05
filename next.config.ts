@@ -47,8 +47,27 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '*.public.blob.vercel-storage.com',
+        hostname: '*.amazonaws.com',
       },
+      {
+        protocol: 'https',
+        hostname: '*.cloudfront.net',
+      },
+      ...(process.env.S3_PUBLIC_URL
+        ? (() => {
+            try {
+              const url = new URL(process.env.S3_PUBLIC_URL)
+              return [
+                {
+                  protocol: url.protocol.replace(':', '') as 'http' | 'https',
+                  hostname: url.hostname,
+                },
+              ]
+            } catch {
+              return []
+            }
+          })()
+        : []),
     ],
   },
   webpack: (webpackConfig) => {

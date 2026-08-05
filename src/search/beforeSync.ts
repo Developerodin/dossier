@@ -1,11 +1,22 @@
 import { BeforeSync, DocToSync } from '@payloadcms/plugin-search/types'
 
+function uploadRelationId(value: unknown): number | undefined {
+  if (value == null) return undefined
+  if (typeof value === 'number') return value
+  if (typeof value === 'object' && 'id' in value && typeof (value as { id: unknown }).id === 'number') {
+    return (value as { id: number }).id
+  }
+  return undefined
+}
+
 export const beforeSyncWithSearch: BeforeSync = async ({ req, originalDoc, searchDoc }) => {
   const {
     doc: { relationTo: collection },
   } = searchDoc
 
-  const { slug, id, categories, title, meta } = originalDoc
+  const { slug, id, categories, title, meta, heroImage } = originalDoc
+
+  const searchImageId = uploadRelationId(meta?.image) ?? uploadRelationId(heroImage)
 
   const modifiedDoc: DocToSync = {
     ...searchDoc,
@@ -13,7 +24,7 @@ export const beforeSyncWithSearch: BeforeSync = async ({ req, originalDoc, searc
     meta: {
       ...meta,
       title: meta?.title || title,
-      image: meta?.image?.id || meta?.image,
+      image: searchImageId,
       description: meta?.description,
     },
     categories: [],

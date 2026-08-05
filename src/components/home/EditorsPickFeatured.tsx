@@ -4,7 +4,6 @@ import { ArrowUpRight, Sparkles } from 'lucide-react'
 
 import { Media } from '@/components/Media'
 import { AuthorMeta } from './AuthorMeta'
-import { CategoryBadge } from './CategoryBadge'
 import type { HomePostCard } from './types'
 
 type EditorsPickFeaturedProps = {
@@ -12,14 +11,8 @@ type EditorsPickFeaturedProps = {
 }
 
 export const EditorsPickFeatured: React.FC<EditorsPickFeaturedProps> = ({ post }) => {
-  const { title, slug, excerpt, heroImage, categories, populatedAuthors, publishedAt, readingTime } =
-    post
+  const { title, slug, excerpt, heroImage, populatedAuthors, publishedAt, readingTime } = post
   const href = `/posts/${slug}`
-
-  const primaryCategory =
-    categories?.find((cat) => typeof cat === 'object' && cat !== null) ?? null
-  const categoryTitle = primaryCategory?.title ?? null
-  const categoryHref = primaryCategory?.slug ? `/categories/${primaryCategory.slug}` : null
 
   return (
     <article className="home-editors-featured">
@@ -44,15 +37,6 @@ export const EditorsPickFeatured: React.FC<EditorsPickFeaturedProps> = ({ post }
       </span>
 
       <div className="home-editors-featured__content">
-        {categoryTitle && (
-          <CategoryBadge
-            label={categoryTitle}
-            href={categoryHref}
-            variant="text"
-            className="home-editors-featured__category"
-          />
-        )}
-
         <h3 className="home-editors-featured__title">
           <Link href={href}>{title}</Link>
         </h3>
