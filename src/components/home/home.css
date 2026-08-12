@@ -505,6 +505,8 @@ a.home-category:hover {
 .home-trending__cards-wrap {
   min-width: 0;
   position: relative;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .home-trending__desktop-carousel {
@@ -513,6 +515,8 @@ a.home-category:hover {
 
 .home-trending__desktop-track {
   display: flex;
+  width: 100%;
+  min-width: 0;
   gap: var(--space-4);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -582,6 +586,8 @@ a.home-category:hover {
 
 .home-trending__mobile-track {
   display: flex;
+  width: 100%;
+  min-width: 0;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -594,6 +600,8 @@ a.home-category:hover {
 
 .home-trending__mobile-page {
   flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 
+import { getCategoryIcon } from './categoryIcons'
 import type { ExploreCategory } from './queryExploreCategories'
 
 type CategoryTilesProps = {
@@ -16,13 +17,24 @@ export const CategoryTiles: React.FC<CategoryTilesProps> = ({ categories }) => {
         Categories
       </h3>
       <ul className="mag-category-tiles__grid">
-        {categories.slice(0, 8).map((category) => (
-          <li key={category.id}>
-            <Link href={`/categories/${category.slug}`} className="mag-category-tiles__item">
-              <span className="mag-category-tiles__label">{category.title}</span>
-            </Link>
-          </li>
-        ))}
+        {categories.slice(0, 8).map((category) => {
+          const Icon = getCategoryIcon(category.slug)
+
+          return (
+            <li key={category.id}>
+              <Link
+                href={`/categories/${category.slug}`}
+                className="mag-category-tiles__item"
+                style={{ '--topic-accent': category.accentColor } as React.CSSProperties}
+              >
+                <span className="mag-category-tiles__icon" aria-hidden="true">
+                  <Icon className="mag-category-tiles__icon-svg" />
+                </span>
+                <span className="mag-category-tiles__label">{category.title}</span>
+              </Link>
+            </li>
+          )
+        })}
       </ul>
     </aside>
   )

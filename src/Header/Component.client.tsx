@@ -10,7 +10,8 @@ import type { Header } from '@/payload-types'
 import type { BreakingNewsItem } from '@/components/home/types'
 
 import { Logo } from '@/components/Logo/Logo'
-import { AdBanner } from '@/components/magazine/AdBanner'
+// TODO: re-enable header ad
+// import { AdBanner } from '@/components/magazine/AdBanner'
 import { resolveHeaderData } from './defaults'
 import { HeaderNav } from './Nav'
 import { HeaderSearch } from './Search'
@@ -63,24 +64,14 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({
         </div>
       </div>
 
-      <div className="mag-header__center">
-        <div className="mag-header__center-inner">
-          <Link href="/" className="mag-header__logo site-header__logo" aria-label="dossier home">
-            <Logo loading="eager" priority="high" variant="black" />
-          </Link>
-          <AdBanner
-            image={resolved.headerAd?.image}
-            url={resolved.headerAd?.url}
-            className="mag-header__ad"
-          />
-        </div>
-      </div>
-
       <header
         className="mag-header mag-header__menu site-header"
         {...(theme ? { 'data-theme': theme } : {})}
       >
         <div className="mag-header__menu-inner site-header__inner">
+          <Link href="/" className="mag-header__logo site-header__logo" aria-label="dossier home">
+            <Logo loading="eager" priority="high" variant="black" />
+          </Link>
           <HeaderNav items={resolved.navItems || []} />
 
           <div className="site-header__actions mag-header__actions">

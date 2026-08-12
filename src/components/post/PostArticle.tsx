@@ -74,17 +74,19 @@ export const PostArticle: React.FC<PostArticleProps> = ({
 
           <header className="mag-post__header">
             <h1 className="mag-post__title">{post.title}</h1>
-            <div className="mag-post__meta">
-              {post.viewCount != null && (
-                <span>{formatCount(post.viewCount)} views</span>
-              )}
-              {post.readingTime && <span>{post.readingTime} min read</span>}
-              {post.publishedAt && (
-                <time dateTime={post.publishedAt}>Updated {formatDateTime(post.publishedAt)}</time>
-              )}
+            <div className="mag-post__byline">
+              {authorName && <p className="mag-post__author">{authorName}</p>}
+              <div className="mag-post__meta">
+                {post.viewCount != null && (
+                  <span>{formatCount(post.viewCount)} views</span>
+                )}
+                {post.readingTime && <span>{post.readingTime} min read</span>}
+                {post.publishedAt && (
+                  <time dateTime={post.publishedAt}>Updated {formatDateTime(post.publishedAt)}</time>
+                )}
+              </div>
+              <PostShareButtons postId={post.id} title={post.title} url={shareUrl} />
             </div>
-            {authorName && <p className="mag-post__author">{authorName}</p>}
-            <PostShareButtons postId={post.id} title={post.title} url={shareUrl} />
           </header>
 
           {post.heroImage && typeof post.heroImage === 'object' && (
