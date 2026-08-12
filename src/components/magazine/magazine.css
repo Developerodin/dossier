@@ -257,10 +257,15 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .mag-carousel__track {
   display: flex;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   gap: var(--space-4);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -900,25 +905,45 @@
 .mag-trending-area {
   padding-block: var(--space-4);
   border-top: 1px solid var(--border);
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 .mag-trending-area__inner {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
+  width: 100%;
   max-width: var(--breakpoint-2xl);
+  min-width: 0;
+  box-sizing: border-box;
   margin-inline: auto;
   padding-inline: var(--site-gutter);
+}
+
+.mag-trending-area__main {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .mag-trending-area__sidebar {
   display: grid;
   gap: var(--space-3);
   align-content: start;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .mag-trending-area__main .home-trending {
   padding-block: var(--space-5);
   border-radius: 5px;
+}
+
+.mag-trending-area__main .home-trending__inner {
+  padding-inline: 0;
 }
 
 .mag-trending-area .mag-follow .mag-widget-title,
@@ -928,7 +953,7 @@
 
 @media (min-width: 64rem) {
   .mag-trending-area__inner {
-    grid-template-columns: 1fr 18rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
     align-items: start;
   }
 
@@ -941,12 +966,14 @@
 /* Follow us */
 
 .mag-follow__grid {
-  width: fit-content;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.55rem;
 }
 
@@ -954,6 +981,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 0;
+  width: 100%;
   min-height: 2.5rem;
   padding: 0.5rem;
   border: 1px solid var(--border);
@@ -974,6 +1003,12 @@
 }
 
 /* Most view / share widgets */
+
+.mag-most-view,
+.mag-follow {
+  min-width: 0;
+  max-width: 100%;
+}
 
 .mag-most-view__list,
 .mag-most-share__list,
@@ -1054,6 +1089,7 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
 .mag-most-view__title a,
@@ -1637,6 +1673,9 @@
 /* ---- Footer ---- */
 
 .mag-footer {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   background: var(--heading-text);
   color: rgba(255, 255, 255, 0.88);
   border-top: none;
@@ -1673,6 +1712,11 @@
   min-width: 0;
   text-align: left;
   justify-self: stretch;
+}
+
+.mag-footer__columns > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .mag-footer__columns .site-footer__links,

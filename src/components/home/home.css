@@ -2,6 +2,9 @@
 
 .home-page {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 /* ---- Hero ---- */
@@ -345,6 +348,9 @@ a.home-category:hover {
 
 .home-trending {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
   padding-block: var(--space-8);
   background:
     radial-gradient(ellipse 80% 60% at 10% 20%, color-mix(in oklab, var(--brand) 12%, transparent), transparent 55%),
@@ -353,7 +359,9 @@ a.home-category:hover {
 
 .home-trending__inner {
   width: 100%;
-  max-width: var(--breakpoint-2xl);
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   margin-inline: auto;
   padding-inline: var(--site-gutter);
   display: flex;
@@ -504,9 +512,9 @@ a.home-category:hover {
 
 .home-trending__cards-wrap {
   min-width: 0;
+  max-width: 100%;
   position: relative;
   overflow-x: hidden;
-  overflow-x: clip;
 }
 
 .home-trending__desktop-carousel {
@@ -582,11 +590,13 @@ a.home-category:hover {
   flex-direction: column;
   gap: var(--space-4);
   min-width: 0;
+  max-width: 100%;
 }
 
 .home-trending__mobile-track {
   display: flex;
   width: 100%;
+  max-width: 100%;
   min-width: 0;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -599,6 +609,7 @@ a.home-category:hover {
 }
 
 .home-trending__mobile-page {
+  box-sizing: border-box;
   flex: 0 0 100%;
   width: 100%;
   max-width: 100%;
@@ -659,7 +670,8 @@ a.home-category:hover {
 .home-trending-card--desktop {
   display: flex;
   flex-direction: column;
-  flex: 0 0 min(16.5rem, 72vw);
+  flex: 0 0 min(16.5rem, 100%);
+  max-width: 100%;
   scroll-snap-align: start;
   padding: var(--space-3);
   gap: var(--space-3);
@@ -761,6 +773,7 @@ a.home-category:hover {
   line-height: 1.35;
   letter-spacing: -0.01em;
   color: var(--heading-text);
+  overflow-wrap: anywhere;
 }
 
 .home-trending-card--desktop .home-trending-card__title {
