@@ -5,11 +5,15 @@ import React from 'react'
 import type { Form } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
+import {
+  SocialPlatformIcon,
+  socialPlatformLabel,
+} from '@/components/magazine/SocialPlatformIcon'
 import { resolveFooterData } from './defaults'
 import { NewsletterSignup } from './NewsletterSignup'
-import { SocialLinks } from './SocialLinks'
 
 import './footer.css'
+import '@/components/magazine/magazine.css'
 
 function resolveNewsletterFormId(
   form: number | Form | null | undefined,
@@ -29,19 +33,26 @@ export async function Footer() {
   const newsletterFormId = resolveNewsletterFormId(data.newsletter?.form)
 
   return (
-    <footer className="site-footer">
-      <div className="site-footer__inner">
-        <div className="site-footer__grid">
-          <div className="site-footer__brand">
+    <footer className="site-footer mag-footer">
+      <div className="mag-footer__top">
+        <div className="site-footer__inner mag-footer__top-inner">
+          <div className="mag-footer__brand-row">
             <Link href="/" className="site-footer__logo" aria-label="dossier home">
-              <Logo />
+              <Logo variant="white" />
             </Link>
-            <p className="site-footer__copyright site-footer__desktop-copyright">
-              {data.copyright}
-            </p>
           </div>
+          <NewsletterSignup
+            formId={newsletterFormId}
+            heading={data.newsletter?.heading}
+            placeholder={data.newsletter?.placeholder}
+            buttonLabel={data.newsletter?.buttonLabel}
+          />
+        </div>
+      </div>
 
-          <div className="site-footer__columns">
+      <div className="site-footer__inner">
+        <div className="site-footer__grid mag-footer__grid">
+          <div className="site-footer__columns mag-footer__columns">
             <div>
               <p className="site-footer__col-title">Quick links</p>
               <ul className="site-footer__links">
@@ -62,15 +73,6 @@ export async function Footer() {
                 ))}
               </ul>
             </div>
-          </div>
-
-          <hr className="site-footer__separator" />
-
-          <div className="site-footer__socials-mobile">
-            <SocialLinks links={socialLinks} />
-          </div>
-
-          <div className="site-footer__aside">
             <div>
               <p className="site-footer__col-title">{data.contact?.heading || 'Contact us'}</p>
               <ul className="site-footer__contact-list">
@@ -102,19 +104,34 @@ export async function Footer() {
                 </li>
               </ul>
             </div>
-
-            <NewsletterSignup
-              formId={newsletterFormId}
-              heading={data.newsletter?.heading}
-              placeholder={data.newsletter?.placeholder}
-              buttonLabel={data.newsletter?.buttonLabel}
-            />
-
-            <SocialLinks links={socialLinks} />
+            <div className="mag-footer__follow">
+              <p className="site-footer__col-title">Follow us</p>
+              <ul className="mag-follow__grid">
+                {socialLinks.map(({ platform, url, id }, index) => {
+                  if (!platform) return null
+                  const label = socialPlatformLabel(platform)
+                  return (
+                    <li key={id ?? `${platform}-${index}`}>
+                      <a
+                        className="mag-follow__item"
+                        href={url || '#'}
+                        aria-label={label}
+                        title={label}
+                      >
+                        <SocialPlatformIcon
+                          platform={platform}
+                          className="mag-follow__icon"
+                        />
+                      </a>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
           </div>
         </div>
 
-        <p className="site-footer__copyright site-footer__mobile-copyright">{data.copyright}</p>
+        <p className="site-footer__copyright mag-footer__copyright">{data.copyright}</p>
       </div>
     </footer>
   )

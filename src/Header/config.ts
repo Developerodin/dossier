@@ -58,6 +58,42 @@ export const Header: GlobalConfig = {
         },
       },
     },
+    {
+      type: 'group',
+      name: 'headerAd',
+      label: 'Header ad banner',
+      fields: [
+        {
+          name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Banner image',
+        },
+        {
+          name: 'url',
+          type: 'text',
+          label: 'Link URL',
+        },
+      ],
+    },
+    {
+      type: 'group',
+      name: 'sidebarAd',
+      label: 'Sidebar ad banner',
+      fields: [
+        {
+          name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Banner image',
+        },
+        {
+          name: 'url',
+          type: 'text',
+          label: 'Link URL',
+        },
+      ],
+    },
   ],
   hooks: {
     afterChange: [revalidateHeader],

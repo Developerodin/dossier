@@ -172,15 +172,9 @@
 }
 
 .site-logo {
-  display: inline-flex;
-  align-items: center;
+  display: block;
   height: var(--logo-height);
-  font-size: 1.375rem;
-  font-weight: 650;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  color: var(--foreground);
-  text-transform: lowercase;
+  width: auto;
   user-select: none;
 }
 
@@ -265,7 +259,7 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
   --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-md: 5px;
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --color-sidebar: var(--sidebar);

@@ -17,6 +17,7 @@
     "lint:fix": "cross-env NODE_OPTIONS=--no-deprecation eslint . --fix",
     "migrate:prod": "cross-env NODE_OPTIONS=--no-deprecation node --import=tsx/esm scripts/migrate-prod.ts",
     "sync:media": "cross-env NODE_OPTIONS=--no-deprecation node --import=tsx/esm scripts/sync-media-to-s3.ts",
+    "refresh:heroes": "cross-env NODE_OPTIONS=--no-deprecation node --import=tsx/esm scripts/refresh-hero-images.ts",
     "ensure:categories": "cross-env NODE_OPTIONS=--no-deprecation node --import=tsx/esm scripts/ensure-categories.ts",
     "resync:search": "cross-env NODE_OPTIONS=--no-deprecation node --import=tsx/esm scripts/resync-search.ts",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",

@@ -4,7 +4,7 @@ import { Eye } from 'lucide-react'
 
 import { Media } from '@/components/Media'
 
-import { formatRelativeTime } from './fundingUtils'
+import { formatRelativeTime } from '@/utilities/formatRelativeTime'
 import { formatViewCount } from './formatViewCount'
 import { getTopicCategory } from './getTopicCategory'
 import type { HomePostCard } from './types'

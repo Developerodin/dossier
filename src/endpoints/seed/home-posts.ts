@@ -16,6 +16,9 @@ type SeedPostInput = {
   editorsPick?: boolean
   editorsPickOrder?: number
   viewCount?: number
+  shareCount?: number
+  videoNews?: boolean
+  videoUrl?: string
 }
 
 /** ~1000 words of classic lorem ipsum, split into readable paragraphs. */
@@ -74,6 +77,9 @@ export function createSeedPost({
   editorsPick = false,
   editorsPickOrder = 0,
   viewCount,
+  shareCount,
+  videoNews = false,
+  videoUrl,
 }: SeedPostInput): RequiredDataFromCollectionSlug<'posts'> {
   return {
     title,
@@ -84,6 +90,9 @@ export function createSeedPost({
     excerpt,
     readingTime,
     viewCount,
+    shareCount,
+    videoNews,
+    videoUrl,
     featured,
     featuredOrder,
     breakingNews,

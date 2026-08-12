@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Endpoint } from 'payload'
 
 import {
   BlocksFeature,
@@ -26,6 +26,76 @@ import {
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { slugField } from 'payload'
+
+const incrementViewEndpoint: Endpoint = {
+  path: '/:id/view',
+  method: 'post',
+  handler: async (req) => {
+    const id = req.routeParams?.id
+    if (!id) {
+      return Response.json({ error: 'Missing post id' }, { status: 400 })
+    }
+
+    try {
+      const post = await req.payload.findByID({
+        collection: 'posts',
+        id: String(id),
+        depth: 0,
+        overrideAccess: true,
+      })
+
+      const current = typeof post.viewCount === 'number' ? post.viewCount : 0
+
+      await req.payload.update({
+        collection: 'posts',
+        id: String(id),
+        data: { viewCount: current + 1 },
+        depth: 0,
+        overrideAccess: true,
+        context: { disableRevalidate: true },
+      })
+
+      return Response.json({ ok: true })
+    } catch {
+      return Response.json({ error: 'Post not found' }, { status: 404 })
+    }
+  },
+}
+
+const incrementShareEndpoint: Endpoint = {
+  path: '/:id/share',
+  method: 'post',
+  handler: async (req) => {
+    const id = req.routeParams?.id
+    if (!id) {
+      return Response.json({ error: 'Missing post id' }, { status: 400 })
+    }
+
+    try {
+      const post = await req.payload.findByID({
+        collection: 'posts',
+        id: String(id),
+        depth: 0,
+        overrideAccess: true,
+      })
+
+      const current = typeof post.shareCount === 'number' ? post.shareCount : 0
+
+      await req.payload.update({
+        collection: 'posts',
+        id: String(id),
+        data: { shareCount: current + 1 },
+        depth: 0,
+        overrideAccess: true,
+        context: { disableRevalidate: true },
+      })
+
+      return Response.json({ ok: true })
+    } catch {
+      return Response.json({ error: 'Post not found' }, { status: 404 })
+    }
+  },
+}
 
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
@@ -193,6 +263,37 @@ export const Posts: CollectionConfig<'posts'> = {
       },
       label: 'View count',
       min: 0,
+      defaultValue: 0,
+    },
+    {
+      name: 'shareCount',
+      type: 'number',
+      admin: {
+        position: 'sidebar',
+        description: 'Share count for Most Share widgets.',
+      },
+      label: 'Share count',
+      min: 0,
+      defaultValue: 0,
+    },
+    {
+      name: 'videoUrl',
+      type: 'text',
+      admin: {
+        position: 'sidebar',
+        description: 'YouTube or Vimeo URL for video posts.',
+      },
+      label: 'Video URL',
+    },
+    {
+      name: 'videoNews',
+      type: 'checkbox',
+      admin: {
+        position: 'sidebar',
+        description: 'Include this post in the homepage Video News section.',
+      },
+      defaultValue: false,
+      label: 'Video news',
     },
     {
       name: 'featured',
@@ -301,6 +402,7 @@ export const Posts: CollectionConfig<'posts'> = {
     afterRead: [populateAuthors],
     afterDelete: [revalidateDelete],
   },
+  endpoints: [incrementViewEndpoint, incrementShareEndpoint],
   versions: {
     drafts: {
       autosave: {

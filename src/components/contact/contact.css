@@ -3,7 +3,7 @@
 .contact-page {
   --contact-ink: var(--heading-text);
   --contact-muted: var(--muted-text);
-  --contact-card-radius: var(--radius-xl);
+  --contact-card-radius: 5px;
   --contact-soft: var(--brand-soft);
   color: var(--contact-ink);
 }
@@ -565,7 +565,7 @@
   width: min(100%, 18rem);
   padding: var(--space-4);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: 5px;
   background: var(--surface);
   box-shadow: var(--shadow-card);
 }
@@ -606,7 +606,7 @@
 
 .contact-faq__item {
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: 5px;
   background: var(--surface);
   overflow: hidden;
 }
@@ -654,7 +654,7 @@
   align-items: flex-start;
   gap: var(--space-3);
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: 5px;
   background: var(--brand-soft);
 }
 

@@ -1,4 +1,34 @@
-/* Site header — uses tokens from globals.css */
+.mag-header.site-header {
+  border-bottom: none;
+}
+
+.mag-header .site-header__nav {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .mag-header .site-header__nav {
+    display: flex;
+  }
+
+  .mag-header .site-header__search-form {
+    display: flex;
+  }
+
+  .mag-header .site-header__search-icon {
+    display: none;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .mag-header .site-header__search-form {
+    display: none;
+  }
+
+  .mag-header .site-header__search-icon {
+    display: inline-flex;
+  }
+}
 
 .site-header {
   position: sticky;
@@ -66,7 +96,7 @@
   padding: 0 0.625rem;
   font-size: 0.8125rem;
   border: 1px solid var(--input);
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: 5px;
   background: var(--background);
   color: var(--foreground);
 }
@@ -88,7 +118,7 @@
   height: 2rem;
   padding: 0;
   border: none;
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: 5px;
   background: transparent;
   color: var(--foreground);
   cursor: pointer;
@@ -138,7 +168,7 @@
   height: 2rem;
   padding: 0 0.625rem;
   border: 1px solid var(--input);
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: 5px;
   background: transparent;
   color: var(--foreground);
   font-size: 0.8125rem;

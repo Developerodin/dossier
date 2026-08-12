@@ -71,7 +71,6 @@ export interface Config {
     posts: Post;
     media: Media;
     categories: Category;
-    'funding-rounds': FundingRound;
     users: User;
     redirects: Redirect;
     forms: Form;
@@ -94,7 +93,6 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    'funding-rounds': FundingRoundsSelect<false> | FundingRoundsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -114,12 +112,10 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
-    'funding-news': FundingNew;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
-    'funding-news': FundingNewsSelect<false> | FundingNewsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -269,6 +265,18 @@ export interface Post {
    * Display view count on cards (e.g. 128000 shows as 128K).
    */
   viewCount?: number | null;
+  /**
+   * Share count for Most Share widgets.
+   */
+  shareCount?: number | null;
+  /**
+   * YouTube or Vimeo URL for video posts.
+   */
+  videoUrl?: string | null;
+  /**
+   * Include this post in the homepage Video News section.
+   */
+  videoNews?: boolean | null;
   /**
    * Show this post as the homepage featured story.
    */
@@ -815,55 +823,6 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "funding-rounds".
- */
-export interface FundingRound {
-  id: number;
-  companyName: string;
-  logo?: (number | null) | Media;
-  series:
-    | 'pre-seed'
-    | 'seed'
-    | 'series-a'
-    | 'series-b'
-    | 'series-c'
-    | 'series-d'
-    | 'series-e'
-    | 'series-f'
-    | 'growth'
-    | 'ipo';
-  /**
-   * Display string, e.g. $6B or $300M
-   */
-  amount: string;
-  /**
-   * Numeric value in billions for sorting (e.g. 6 for $6B, 0.3 for $300M)
-   */
-  amountValue?: number | null;
-  sector?: string | null;
-  announcedAt: string;
-  /**
-   * Shows TOP DEAL badge and featured card treatment
-   */
-  topDeal?: boolean | null;
-  investors?:
-    | {
-        name: string;
-        logo?: (number | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1067,10 +1026,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: number | Category;
-      } | null)
-    | ({
-        relationTo: 'funding-rounds';
-        value: number | FundingRound;
       } | null)
     | ({
         relationTo: 'users';
@@ -1293,6 +1248,9 @@ export interface PostsSelect<T extends boolean = true> {
   excerpt?: T;
   readingTime?: T;
   viewCount?: T;
+  shareCount?: T;
+  videoUrl?: T;
+  videoNews?: T;
   featured?: T;
   featuredOrder?: T;
   editorsPick?: T;
@@ -1427,32 +1385,6 @@ export interface CategoriesSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "funding-rounds_select".
- */
-export interface FundingRoundsSelect<T extends boolean = true> {
-  companyName?: T;
-  logo?: T;
-  series?: T;
-  amount?: T;
-  amountValue?: T;
-  sector?: T;
-  announcedAt?: T;
-  topDeal?: T;
-  investors?:
-    | T
-    | {
-        name?: T;
-        logo?: T;
-        id?: T;
-      };
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1804,6 +1736,14 @@ export interface Header {
         id?: string | null;
       }[]
     | null;
+  headerAd?: {
+    image?: (number | null) | Media;
+    url?: string | null;
+  };
+  sidebarAd?: {
+    image?: (number | null) | Media;
+    url?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1884,30 +1824,6 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "funding-news".
- */
-export interface FundingNew {
-  id: number;
-  eyebrow?: string | null;
-  title: string;
-  /**
-   * Highlighted phrase after the title (styled in green)
-   */
-  titleAccent?: string | null;
-  subtitle?: string | null;
-  ctaLabel?: string | null;
-  ctaLink?: string | null;
-  stats?: {
-    totalFundingThisWeek?: string | null;
-    roundsCount?: string | null;
-    topSector?: string | null;
-    biggestRound?: string | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1944,6 +1860,18 @@ export interface HeaderSelect<T extends boolean = true> {
               id?: T;
             };
         id?: T;
+      };
+  headerAd?:
+    | T
+    | {
+        image?: T;
+        url?: T;
+      };
+  sidebarAd?:
+    | T
+    | {
+        image?: T;
+        url?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2005,29 +1933,6 @@ export interface FooterSelect<T extends boolean = true> {
         platform?: T;
         url?: T;
         id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "funding-news_select".
- */
-export interface FundingNewsSelect<T extends boolean = true> {
-  eyebrow?: T;
-  title?: T;
-  titleAccent?: T;
-  subtitle?: T;
-  ctaLabel?: T;
-  ctaLink?: T;
-  stats?:
-    | T
-    | {
-        totalFundingThisWeek?: T;
-        roundsCount?: T;
-        topSector?: T;
-        biggestRound?: T;
       };
   updatedAt?: T;
   createdAt?: T;

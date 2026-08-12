@@ -13,6 +13,7 @@ import { ContactNewsletter } from './ContactNewsletter'
 import { ContactTeam } from './ContactTeam'
 
 import './contact.css'
+import '@/components/magazine/magazine.css'
 
 export const ContactPage: React.FC = async () => {
   const [formId, newsletterFormId] = await Promise.all([
@@ -21,7 +22,7 @@ export const ContactPage: React.FC = async () => {
   ])
 
   return (
-    <div className="contact-page">
+    <div className="contact-page mag-contact">
       <section className="contact-hero" aria-labelledby="contact-hero-title">
         <div className="contact-hero__inner">
           <ContactHero />

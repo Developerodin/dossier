@@ -1,19 +1,26 @@
 import type { Metadata } from 'next'
 
-import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
+import { PostArticle } from '@/components/post/PostArticle'
+import { queryHomePosts } from '@/components/home/queryHomePosts'
+import { queryMostSharedPosts } from '@/components/home/querySidebarPosts'
+import { queryTrendingPosts } from '@/components/home/queryTrendingPosts'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
-import RichText from '@/components/RichText'
 
 import type { Post } from '@/payload-types'
 
-import { PostHero } from '@/heros/PostHero'
 import { generateMeta } from '@/utilities/generateMeta'
+import { getCachedGlobal } from '@/utilities/getGlobals'
+import { getServerSideURL } from '@/utilities/getURL'
+import { NEWSLETTER_FORM_TITLE } from '@/utilities/ensureRequiredForms'
+import { queryFormIdByTitle } from '@/utilities/queryFormByTitle'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+
+import '@/components/magazine/magazine.css'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
@@ -31,11 +38,7 @@ export async function generateStaticParams() {
     },
   })
 
-  const params = posts.docs.map(({ slug }) => {
-    return { slug }
-  })
-
-  return params
+  return posts.docs.map(({ slug }) => ({ slug }))
 }
 
 type Args = {
@@ -47,42 +50,55 @@ type Args = {
 export default async function Post({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug = '' } = await paramsPromise
-  // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
   const url = '/posts/' + decodedSlug
   const post = await queryPostBySlug({ slug: decodedSlug })
 
   if (!post) return <PayloadRedirects url={url} />
 
+  const [homePosts, trending, mostShared, headerData, footerData, newsletterFormId, adjacent] =
+    await Promise.all([
+      queryHomePosts(),
+      queryTrendingPosts(),
+      queryMostSharedPosts(5),
+      getCachedGlobal('header', 1)(),
+      getCachedGlobal('footer', 1)(),
+      queryFormIdByTitle(NEWSLETTER_FORM_TITLE)(),
+      queryAdjacentPosts({ slug: decodedSlug, publishedAt: post.publishedAt }),
+    ])
+
+  const shareUrl = `${getServerSideURL()}${url}`
+  const related =
+    post.relatedPosts?.filter((item): item is Post => typeof item === 'object') ?? []
+
   return (
-    <article className="pt-8 pb-8">
+    <>
       <PageClient />
 
-      {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
 
-      <PostHero post={post} />
-
-      <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="container">
-          <RichText className="max-w-[48rem] mx-auto" data={post.content} enableGutter={false} />
-          {post.relatedPosts && post.relatedPosts.length > 0 && (
-            <RelatedPosts
-              className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
-              docs={post.relatedPosts.filter((post) => typeof post === 'object')}
-            />
-          )}
-        </div>
-      </div>
-    </article>
+      <PostArticle
+        post={post}
+        trending={trending}
+        breaking={homePosts.breaking}
+        latest={homePosts.latest}
+        mostShared={mostShared}
+        prevPost={adjacent.prev}
+        nextPost={adjacent.next}
+        relatedPosts={related}
+        newsletterFormId={newsletterFormId}
+        socialLinks={footerData?.socialLinks}
+        sidebarAd={headerData?.sidebarAd}
+        shareUrl={shareUrl}
+      />
+    </>
   )
 }
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug = '' } = await paramsPromise
-  // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
   const post = await queryPostBySlug({ slug: decodedSlug })
 
@@ -91,7 +107,6 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 
 const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
-
   const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({
@@ -109,3 +124,62 @@ const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
 
   return result.docs?.[0] || null
 })
+
+const queryAdjacentPosts = cache(
+  async ({
+    slug,
+    publishedAt,
+  }: {
+    slug: string
+    publishedAt?: string | null
+  }): Promise<{
+    prev: { title: string; slug: string } | null
+    next: { title: string; slug: string } | null
+  }> => {
+    if (!publishedAt) return { prev: null, next: null }
+
+    const payload = await getPayload({ config: configPromise })
+
+    const [prevResult, nextResult] = await Promise.all([
+      payload.find({
+        collection: 'posts',
+        depth: 0,
+        limit: 1,
+        pagination: false,
+        select: { title: true, slug: true },
+        sort: '-publishedAt',
+        where: {
+          and: [
+            { _status: { equals: 'published' } },
+            { publishedAt: { greater_than: publishedAt } },
+            { slug: { not_equals: slug } },
+          ],
+        },
+      }),
+      payload.find({
+        collection: 'posts',
+        depth: 0,
+        limit: 1,
+        pagination: false,
+        select: { title: true, slug: true },
+        sort: 'publishedAt',
+        where: {
+          and: [
+            { _status: { equals: 'published' } },
+            { publishedAt: { less_than: publishedAt } },
+            { slug: { not_equals: slug } },
+          ],
+        },
+      }),
+    ])
+
+    return {
+      prev: nextResult.docs[0]
+        ? { title: nextResult.docs[0].title, slug: nextResult.docs[0].slug }
+        : null,
+      next: prevResult.docs[0]
+        ? { title: prevResult.docs[0].title, slug: prevResult.docs[0].slug }
+        : null,
+    }
+  },
+)

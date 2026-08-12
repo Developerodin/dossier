@@ -58,6 +58,8 @@ export function resolveHeaderData(data: Header | null | undefined): Header {
     id: data?.id ?? 0,
     navItems,
     sidebarGroups,
+    headerAd: data?.headerAd,
+    sidebarAd: data?.sidebarAd,
     updatedAt: data?.updatedAt,
     createdAt: data?.createdAt,
   }

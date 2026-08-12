@@ -11,6 +11,7 @@ import {
 } from '@/components/category'
 import { Pagination } from '@/components/Pagination'
 import '@/components/category/category.css'
+import '@/components/magazine/magazine.css'
 import PageClient from './page.client'
 
 export const dynamic = 'force-static'
@@ -32,9 +33,9 @@ export default async function CategoryPage({ params: paramsPromise }: Args) {
   const paginationBase = `/categories/${category.slug}`
 
   return (
-    <div className="category-page">
+    <div className="category-page mag-category-page">
       <PageClient />
-      <div className="category-page__inner">
+      <div className="category-page__inner mag-category-page__inner">
         <CategoryPageHeader title={category.title} description={category.description} />
         <CategoryPostList
           posts={posts}

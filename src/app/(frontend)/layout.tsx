@@ -9,12 +9,14 @@ import React from 'react'
 import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
+import { BackToTop } from '@/components/magazine/BackToTop'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
 
 import './globals.css'
+import '@/components/magazine/magazine.css'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const caveat = Caveat({
@@ -48,6 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Header />
           {children}
           <Footer />
+          <BackToTop />
         </Providers>
       </body>
     </html>

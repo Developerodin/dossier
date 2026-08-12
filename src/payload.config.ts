@@ -5,13 +5,11 @@ import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
-import { FundingRounds } from './collections/FundingRounds'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
 import { Footer } from './Footer/config'
-import { FundingNews } from './FundingNews/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
@@ -74,9 +72,9 @@ export default buildConfig({
     // To opt back in on CI: set PAYLOAD_RUN_PROD_MIGRATIONS=true
     ...(process.env.PAYLOAD_RUN_PROD_MIGRATIONS === 'true' ? { prodMigrations: migrations } : {}),
   }),
-  collections: [Pages, Posts, Media, Categories, FundingRounds, Users],
+  collections: [Pages, Posts, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer, FundingNews],
+  globals: [Header, Footer],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

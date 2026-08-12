@@ -77,7 +77,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { hero, layout } = page
 
   return (
-    <article className={decodedSlug === 'home' || decodedSlug === 'contact' ? 'pt-8' : 'pt-8 pb-8'}>
+    <article className={decodedSlug === 'home' || decodedSlug === 'contact' ? undefined : 'pb-8'}>
       <PageClient />
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
