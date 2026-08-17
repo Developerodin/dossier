@@ -4,6 +4,7 @@ import { cn } from '@/utilities/ui'
 import { Caveat } from 'next/font/google'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
+import Script from 'next/script'
 import React from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
@@ -52,6 +53,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Footer />
           <BackToTop />
         </Providers>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-G60DP47NDD"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-G60DP47NDD');
+          `}
+        </Script>
       </body>
     </html>
   )
