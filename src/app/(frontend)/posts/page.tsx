@@ -7,6 +7,8 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
 import PageClient from './page.client'
+import { getServerSideURL } from '@/utilities/getURL'
+import { SITE_NAME } from '@/utilities/siteInfo'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
@@ -59,6 +61,8 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `dossier Posts`,
+    title: `Latest technology news and analysis | ${SITE_NAME}`,
+    description: `Every article from ${SITE_NAME}, newest first: AI, startups, funding, big tech, and cybersecurity.`,
+    alternates: { canonical: `${getServerSideURL()}/posts` },
   }
 }

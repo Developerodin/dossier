@@ -35,7 +35,12 @@ export const FeatureNewsCarousel: React.FC<FeatureNewsCarouselProps> = ({ posts 
                 <article className="mag-feature-news__card">
                   <Link href={`/posts/${post.slug}`} className="mag-feature-news__media">
                     {post.heroImage && typeof post.heroImage === 'object' ? (
-                      <Media resource={post.heroImage} imgClassName="mag-feature-news__img" />
+                      <Media
+                        resource={post.heroImage}
+                        fill
+                        imgClassName="mag-feature-news__img"
+                        size="(max-width: 768px) 80vw, 25vw"
+                      />
                     ) : (
                       <span className="mag-feature-news__placeholder" />
                     )}

@@ -227,6 +227,9 @@ export interface Page {
 export interface Post {
   id: number;
   title: string;
+  /**
+   * Click the pencil on the image, then Edit Image, to set the focal point used for cropping in cards and heroes across the site.
+   */
   heroImage?: (number | null) | Media;
   content: {
     root: {

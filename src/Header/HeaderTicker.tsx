@@ -28,7 +28,7 @@ export const HeaderTicker: React.FC<HeaderTickerProps> = ({ items }) => {
 
   return (
     <div className="mag-header-ticker">
-      <span className="mag-header-ticker__label">Trending</span>
+      <span className="mag-header-ticker__label">Trending :</span>
       <div className="mag-header-ticker__track">
         {items.map((item, i) => (
           <Link

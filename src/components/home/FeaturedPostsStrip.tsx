@@ -20,7 +20,12 @@ export const FeaturedPostsStrip: React.FC<FeaturedPostsStripProps> = ({ posts })
             <article key={post.id} className="mag-featured-strip__item">
               <Link href={`/posts/${post.slug}`} className="mag-featured-strip__thumb">
                 {post.heroImage && typeof post.heroImage === 'object' ? (
-                  <Media resource={post.heroImage} imgClassName="mag-featured-strip__img" />
+                  <Media
+                    resource={post.heroImage}
+                    fill
+                    imgClassName="mag-featured-strip__img"
+                    size="6.5rem"
+                  />
                 ) : (
                   <span className="mag-featured-strip__placeholder" />
                 )}

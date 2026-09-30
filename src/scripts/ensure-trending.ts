@@ -35,6 +35,7 @@ async function main() {
         description: 'The stories everyone is talking about right now.',
         accentColor: '#7C3AED',
       },
+      context: { disableRevalidate: true },
     })
     payload.logger.info(`Created Trending category id=${trending.id}`)
   } else {

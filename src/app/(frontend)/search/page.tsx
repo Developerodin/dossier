@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 import { Search } from '@/search/Component'
 import PageClient from './page.client'
+import { SITE_NAME } from '@/utilities/siteInfo'
 import { CardPostData } from '@/components/Card'
 import { SearchResults } from '@/components/magazine/SearchResults'
 
@@ -85,6 +86,7 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
 
 export function generateMetadata(): Metadata {
   return {
-    title: `dossier Search`,
+    title: `Search | ${SITE_NAME}`,
+    description: `Search ${SITE_NAME} coverage of AI, startups, funding, big tech, and cybersecurity.`,
   }
 }

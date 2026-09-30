@@ -19,6 +19,9 @@ import { NEWSLETTER_FORM_TITLE } from '@/utilities/ensureRequiredForms'
 import { queryFormIdByTitle } from '@/utilities/queryFormByTitle'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { JsonLd } from '@/components/JsonLd'
+import { getPrimaryCategory } from '@/utilities/primaryCategory'
+import { breadcrumbSchema, newsArticleSchema } from '@/utilities/structuredData'
 
 import '@/components/magazine/magazine.css'
 
@@ -68,11 +71,23 @@ export default async function Post({ params: paramsPromise }: Args) {
     ])
 
   const shareUrl = `${getServerSideURL()}${url}`
-  const related =
-    post.relatedPosts?.filter((item): item is Post => typeof item === 'object') ?? []
+  const related = post.relatedPosts?.filter((item): item is Post => typeof item === 'object') ?? []
+  const primaryCategory = getPrimaryCategory(post.categories)
 
   return (
     <>
+      <JsonLd
+        data={[
+          newsArticleSchema(post),
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            ...(primaryCategory
+              ? [{ name: primaryCategory.title, path: `/categories/${primaryCategory.slug}` }]
+              : [{ name: 'Articles', path: '/posts' }]),
+            { name: post.title, path: url },
+          ]),
+        ]}
+      />
       <PageClient />
 
       <PayloadRedirects disableNotFound url={url} />
@@ -102,7 +117,7 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const decodedSlug = decodeURIComponent(slug)
   const post = await queryPostBySlug({ slug: decodedSlug })
 
-  return generateMeta({ doc: post })
+  return generateMeta({ doc: post, path: `/posts/${decodedSlug}`, type: 'article' })
 }
 
 const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {

@@ -155,6 +155,13 @@ export const Posts: CollectionConfig<'posts'> = {
               name: 'heroImage',
               type: 'upload',
               relationTo: 'media',
+              admin: {
+                description:
+                  'Click the pencil on the image, then Edit Image, to set the focal point used for cropping in cards and heroes across the site.',
+                components: {
+                  afterInput: ['@/components/admin/HeroImageCropPreview'],
+                },
+              },
             },
             {
               name: 'content',

@@ -19,6 +19,9 @@ import { draftMode } from 'next/headers'
 import './globals.css'
 import '@/components/magazine/magazine.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import { JsonLd } from '@/components/JsonLd'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from '@/utilities/siteInfo'
+import { organizationSchema, websiteSchema } from '@/utilities/structuredData'
 
 const caveat = Caveat({
   subsets: ['latin'],
@@ -39,6 +42,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <link href="/llms.txt" rel="alternate" title={`${SITE_NAME} llms.txt`} type="text/plain" />
+        <JsonLd data={[organizationSchema(), websiteSchema()]} />
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
@@ -81,9 +86,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
+  title: `${SITE_NAME} | ${SITE_TAGLINE}`,
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
   openGraph: mergeOpenGraph(),
   twitter: {
     card: 'summary_large_image',
-    creator: '@dossier',
   },
 }

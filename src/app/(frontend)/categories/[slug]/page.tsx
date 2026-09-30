@@ -13,6 +13,11 @@ import { Pagination } from '@/components/Pagination'
 import '@/components/category/category.css'
 import '@/components/magazine/magazine.css'
 import PageClient from './page.client'
+import { JsonLd } from '@/components/JsonLd'
+import { getServerSideURL } from '@/utilities/getURL'
+import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
+import { SITE_NAME } from '@/utilities/siteInfo'
+import { breadcrumbSchema, collectionPageSchema } from '@/utilities/structuredData'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
@@ -34,6 +39,15 @@ export default async function CategoryPage({ params: paramsPromise }: Args) {
 
   return (
     <div className="category-page mag-category-page">
+      <JsonLd
+        data={[
+          collectionPageSchema(category),
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: category.title, path: paginationBase },
+          ]),
+        ]}
+      />
       <PageClient />
       <div className="category-page__inner mag-category-page__inner">
         <CategoryPageHeader title={category.title} description={category.description} />
@@ -60,9 +74,17 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
     }
   }
 
+  const title = `${data.category.title} news | ${SITE_NAME}`
+  const description =
+    data.category.description?.trim() ||
+    `The latest ${data.category.title} news, analysis, and reporting from ${SITE_NAME}.`
+  const url = `${getServerSideURL()}/categories/${data.category.slug}`
+
   return {
-    title: data.category.title,
-    description: data.category.description || undefined,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: mergeOpenGraph({ title, description, url }),
   }
 }
 

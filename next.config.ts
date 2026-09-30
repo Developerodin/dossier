@@ -81,6 +81,17 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   redirects,
+  async headers() {
+    const noindex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }]
+
+    return [
+      { source: '/admin', headers: noindex },
+      { source: '/admin/:path*', headers: noindex },
+      { source: '/next/:path*', headers: noindex },
+      // Media files stay indexable so article images can appear in image search.
+      { source: '/api/:path((?!media/file/).*)', headers: noindex },
+    ]
+  },
   turbopack: {
     root: path.resolve(dirname),
   },

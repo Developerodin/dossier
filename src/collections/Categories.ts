@@ -1,8 +1,20 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig } from 'payload'
+
+import { revalidateTag } from 'next/cache'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { slugField } from 'payload'
+
+const revalidateCategory: CollectionAfterChangeHook = ({ doc, req: { context } }) => {
+  if (!context.disableRevalidate) revalidateTag('categories-sitemap', 'max')
+  return doc
+}
+
+const revalidateCategoryDelete: CollectionAfterDeleteHook = ({ doc, req: { context } }) => {
+  if (!context.disableRevalidate) revalidateTag('categories-sitemap', 'max')
+  return doc
+}
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
@@ -14,6 +26,10 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+  },
+  hooks: {
+    afterChange: [revalidateCategory],
+    afterDelete: [revalidateCategoryDelete],
   },
   fields: [
     {

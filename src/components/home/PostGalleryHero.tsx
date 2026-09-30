@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { Play } from 'lucide-react'
 
-import type { BreakingNewsItem, HomePostCard } from '@/components/home/types'
+import type { HomePostCard } from '@/components/home/types'
 import { PostTabsSidebar } from '@/components/magazine/PostTabsSidebar'
 import { Media } from '@/components/Media'
 import { VideoLightbox } from '@/components/VideoEmbed'
@@ -14,7 +14,6 @@ import { getVideoEmbed } from '@/utilities/getVideoEmbed'
 type PostGalleryHeroProps = {
   posts: HomePostCard[]
   trending: HomePostCard[]
-  breaking: BreakingNewsItem[]
   latest: HomePostCard[]
 }
 
@@ -24,12 +23,7 @@ function getCategory(post: HomePostCard) {
   return cat
 }
 
-export const PostGalleryHero: React.FC<PostGalleryHeroProps> = ({
-  posts,
-  trending,
-  breaking,
-  latest,
-}) => {
+export const PostGalleryHero: React.FC<PostGalleryHeroProps> = ({ posts, trending, latest }) => {
   const slides = posts.length > 0 ? posts : trending.slice(0, 5)
   const [active, setActive] = useState(0)
   const [lightbox, setLightbox] = useState<{ url: string; title: string } | null>(null)
@@ -128,17 +122,25 @@ export const PostGalleryHero: React.FC<PostGalleryHeroProps> = ({
                 onClick={() => setActive(index)}
               >
                 {post.heroImage && typeof post.heroImage === 'object' ? (
-                  <Media resource={post.heroImage} imgClassName="mag-hero__thumb-img" />
+                  <Media
+                    resource={post.heroImage}
+                    fill
+                    imgClassName="mag-hero__thumb-img"
+                    size="6.2rem"
+                  />
                 ) : (
                   <span className="mag-hero__thumb-fallback" />
                 )}
+                <span className="mag-hero__thumb-title" aria-hidden="true">
+                  <span className="mag-hero__thumb-title-text">{post.title}</span>
+                </span>
               </button>
             ))}
           </div>
         </div>
 
         <div className="mag-hero__sidebar">
-          <PostTabsSidebar trending={trending} breaking={breaking} latest={latest} />
+          <PostTabsSidebar trending={trending} latest={latest} />
         </div>
       </div>
 

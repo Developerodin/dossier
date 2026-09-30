@@ -38,7 +38,7 @@ export const Card: React.FC<{
   return (
     <article
       className={cn(
-        'border border-border rounded-lg overflow-hidden bg-card hover:cursor-pointer',
+        'site-card border border-border rounded-lg overflow-hidden bg-card hover:cursor-pointer',
         className,
       )}
       ref={card.ref}
@@ -61,7 +61,10 @@ export const Card: React.FC<{
                 return (
                   <Fragment key={index}>
                     {categorySlug ? (
-                      <Link href={`/categories/${categorySlug}`} onClick={(e) => e.stopPropagation()}>
+                      <Link
+                        href={`/categories/${categorySlug}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         {categoryTitle}
                       </Link>
                     ) : (

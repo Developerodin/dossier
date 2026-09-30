@@ -38,12 +38,12 @@ export const HomePage: React.FC = async () => {
     queryVideoNewsPosts(),
     getCachedGlobal('footer', 1)(),
     getCachedGlobal('header', 1)(),
-    ...HOME_CATEGORY_SLUGS.map((slug) => queryCategoryPosts(slug, 4)),
+    ...HOME_CATEGORY_SLUGS.map((slug) => queryCategoryPosts(slug, 5)),
   ])
 
   const categoryPosts = Object.fromEntries(
     HOME_CATEGORY_SLUGS.map((slug, index) => [slug, categoryPostsList[index]]),
-  ) as Record<(typeof HOME_CATEGORY_SLUGS)[number], typeof categoryPostsList[number]>
+  ) as Record<(typeof HOME_CATEGORY_SLUGS)[number], (typeof categoryPostsList)[number]>
 
   const { featuredPosts, breaking, latest, editorsPicks, popular, mostShared } = homePosts
   const sidebarAd = headerData?.sidebarAd
@@ -51,12 +51,7 @@ export const HomePage: React.FC = async () => {
 
   return (
     <div className="home-page mag-page">
-      <PostGalleryHero
-        posts={featuredPosts}
-        trending={trending}
-        breaking={breaking}
-        latest={latest}
-      />
+      <PostGalleryHero posts={featuredPosts} trending={trending} latest={latest} />
       {breaking.length > 0 && <BreakingNewsStrip items={breaking} />}
       {editorsPicks.length > 0 && <FeatureNewsCarousel posts={editorsPicks} />}
       <TrendingWithSidebar posts={trending} popular={popular} socialLinks={socialLinks} />

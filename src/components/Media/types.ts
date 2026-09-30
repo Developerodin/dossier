@@ -15,6 +15,8 @@ export interface Props {
   onClick?: () => void
   onLoad?: () => void
   loading?: 'lazy' | 'eager' // for NextImage only
+  /** Override CSS object-position; defaults to media focalX/focalY when present */
+  objectPosition?: string
   /** Prefer a specific Payload-generated size; defaults to large (priority) or medium */
   payloadSize?: PayloadImageSize
   priority?: boolean // for NextImage only

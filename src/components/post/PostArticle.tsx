@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -77,12 +78,12 @@ export const PostArticle: React.FC<PostArticleProps> = ({
             <div className="mag-post__byline">
               {authorName && <p className="mag-post__author">{authorName}</p>}
               <div className="mag-post__meta">
-                {post.viewCount != null && (
-                  <span>{formatCount(post.viewCount)} views</span>
-                )}
+                {post.viewCount != null && <span>{formatCount(post.viewCount)} views</span>}
                 {post.readingTime && <span>{post.readingTime} min read</span>}
                 {post.publishedAt && (
-                  <time dateTime={post.publishedAt}>Updated {formatDateTime(post.publishedAt)}</time>
+                  <time dateTime={post.publishedAt}>
+                    Updated {formatDateTime(post.publishedAt)}
+                  </time>
                 )}
               </div>
               <PostShareButtons postId={post.id} title={post.title} url={shareUrl} />
@@ -125,20 +126,35 @@ export const PostArticle: React.FC<PostArticleProps> = ({
           {(prevPost || nextPost) && (
             <nav className="mag-post__adjacent" aria-label="Adjacent posts">
               {prevPost ? (
-                <Link href={`/posts/${prevPost.slug}`} className="mag-post__adjacent-item">
-                  <span>Previous news</span>
-                  <strong>{prevPost.title}</strong>
+                <Link
+                  href={`/posts/${prevPost.slug}`}
+                  rel="prev"
+                  className="mag-post__adjacent-item mag-post__adjacent-item--prev"
+                >
+                  <span className="mag-post__adjacent-icon" aria-hidden="true">
+                    <ArrowLeft />
+                  </span>
+                  <span className="mag-post__adjacent-body">
+                    <span className="mag-post__adjacent-label">Previous news</span>
+                    <strong className="mag-post__adjacent-title">{prevPost.title}</strong>
+                  </span>
                 </Link>
               ) : (
-                <span />
+                <span className="mag-post__adjacent-placeholder" aria-hidden="true" />
               )}
               {nextPost ? (
                 <Link
                   href={`/posts/${nextPost.slug}`}
+                  rel="next"
                   className="mag-post__adjacent-item mag-post__adjacent-item--next"
                 >
-                  <span>Next news</span>
-                  <strong>{nextPost.title}</strong>
+                  <span className="mag-post__adjacent-body">
+                    <span className="mag-post__adjacent-label">Next news</span>
+                    <strong className="mag-post__adjacent-title">{nextPost.title}</strong>
+                  </span>
+                  <span className="mag-post__adjacent-icon" aria-hidden="true">
+                    <ArrowRight />
+                  </span>
                 </Link>
               ) : null}
             </nav>

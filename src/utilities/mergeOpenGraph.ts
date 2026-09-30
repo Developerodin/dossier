@@ -1,16 +1,18 @@
 import type { Metadata } from 'next'
 import { getServerSideURL } from './getURL'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_OG_IMAGE_PATH, SITE_TAGLINE } from './siteInfo'
 
 const defaultOpenGraph: Metadata['openGraph'] = {
   type: 'website',
-  description: 'Technology news, analysis, and startup coverage from dossier.',
+  description: SITE_DESCRIPTION,
   images: [
     {
-      url: `${getServerSideURL()}/dossier-OG.webp`,
+      url: `${getServerSideURL()}${SITE_OG_IMAGE_PATH}`,
     },
   ],
-  siteName: 'dossier',
-  title: 'dossier',
+  locale: 'en_US',
+  siteName: SITE_NAME,
+  title: `${SITE_NAME} | ${SITE_TAGLINE}`,
 }
 
 export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'] => {
@@ -18,5 +20,5 @@ export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'
     ...defaultOpenGraph,
     ...og,
     images: og?.images ? og.images : defaultOpenGraph.images,
-  }
+  } as Metadata['openGraph']
 }

@@ -22,7 +22,7 @@ export const CategoryNewsBlock: React.FC<CategoryNewsBlockProps> = ({ title, slu
           {title}
         </h2>
         <Link href={`/categories/${slug}`} className="mag-category-block__link">
-          All see
+          See all
         </Link>
       </header>
 
@@ -30,7 +30,12 @@ export const CategoryNewsBlock: React.FC<CategoryNewsBlockProps> = ({ title, slu
         <article className="mag-category-block__lead">
           <Link href={`/posts/${lead.slug}`} className="mag-category-block__lead-media">
             {lead.heroImage && typeof lead.heroImage === 'object' ? (
-              <Media resource={lead.heroImage} imgClassName="mag-category-block__img" />
+              <Media
+                resource={lead.heroImage}
+                fill
+                imgClassName="mag-category-block__img"
+                size="(max-width: 768px) 100vw, 40vw"
+              />
             ) : (
               <span className="mag-category-block__placeholder" />
             )}
@@ -46,7 +51,12 @@ export const CategoryNewsBlock: React.FC<CategoryNewsBlockProps> = ({ title, slu
               <article className="mag-category-block__item">
                 <Link href={`/posts/${post.slug}`} className="mag-category-block__item-media">
                   {post.heroImage && typeof post.heroImage === 'object' ? (
-                    <Media resource={post.heroImage} imgClassName="mag-category-block__item-img" />
+                    <Media
+                      resource={post.heroImage}
+                      fill
+                      imgClassName="mag-category-block__item-img"
+                      size="6rem"
+                    />
                   ) : (
                     <span className="mag-category-block__placeholder" />
                   )}

@@ -51,6 +51,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     fill,
     pictureClassName,
     imgClassName,
+    objectPosition: objectPositionFromProps,
     payloadSize,
     priority,
     resource,
@@ -63,10 +64,16 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
   let height: number | undefined
   let alt = altFromProps
   let src: StaticImageData | string = srcFromProps || ''
+  let focalObjectPosition: string | undefined
 
   if (!src && resource && typeof resource === 'object') {
-    const { alt: altFromResource, height: fullHeight, url, width: fullWidth, sizes: resourceSizes } =
-      resource
+    const {
+      alt: altFromResource,
+      height: fullHeight,
+      url,
+      width: fullWidth,
+      sizes: resourceSizes,
+    } = resource
 
     const preferredKey = payloadSize ?? (priority ? 'large' : 'medium')
     const sized = resourceSizes?.[preferredKey]
@@ -81,7 +88,13 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     const cacheTag = resource.updatedAt
 
     src = getMediaUrl(resolvedUrl, cacheTag)
+
+    if (resource.focalX != null && resource.focalY != null) {
+      focalObjectPosition = `${resource.focalX}% ${resource.focalY}%`
+    }
   }
+
+  const objectPosition = objectPositionFromProps ?? focalObjectPosition
 
   const loading = loadingFromProps || (!priority ? 'lazy' : undefined)
 
@@ -106,6 +119,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
         loading={loading}
         sizes={sizes}
         src={src}
+        style={objectPosition ? { objectPosition } : undefined}
         width={!fill ? width : undefined}
       />
     </picture>

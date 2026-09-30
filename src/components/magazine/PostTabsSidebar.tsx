@@ -12,12 +12,12 @@ type TabKey = 'trending' | 'breaking' | 'latest'
 
 type PostTabsSidebarProps = {
   trending: HomePostCard[]
-  breaking: BreakingNewsItem[] | HomePostCard[]
+  breaking?: BreakingNewsItem[] | HomePostCard[]
   latest: HomePostCard[]
   className?: string
 }
 
-const tabs: { key: TabKey; label: string }[] = [
+const allTabs: { key: TabKey; label: string }[] = [
   { key: 'trending', label: 'Trending' },
   { key: 'breaking', label: 'Breaking News' },
   { key: 'latest', label: 'Latest' },
@@ -36,10 +36,11 @@ export const PostTabsSidebar: React.FC<PostTabsSidebarProps> = ({
   className = '',
 }) => {
   const [active, setActive] = useState<TabKey>('trending')
+  const tabs = allTabs.filter((tab) => tab.key !== 'breaking' || Boolean(breaking))
 
   const lists: Record<TabKey, (HomePostCard | BreakingNewsItem)[]> = {
     trending,
-    breaking,
+    breaking: breaking ?? [],
     latest,
   }
 
@@ -65,13 +66,10 @@ export const PostTabsSidebar: React.FC<PostTabsSidebarProps> = ({
         {items.map((post) => {
           const href = `/posts/${post.slug}`
           const heroImage = 'heroImage' in post ? post.heroImage : undefined
-          const category =
-            'categories' in post ? getCategoryTitle(post as HomePostCard) : undefined
+          const category = 'categories' in post ? getCategoryTitle(post as HomePostCard) : undefined
           const publishedAt = 'publishedAt' in post ? post.publishedAt : undefined
           const categorySlug =
-            'categories' in post &&
-            post.categories?.[0] &&
-            typeof post.categories[0] !== 'number'
+            'categories' in post && post.categories?.[0] && typeof post.categories[0] !== 'number'
               ? post.categories[0].slug
               : undefined
 

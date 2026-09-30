@@ -112,7 +112,7 @@ a.home-category:hover {
 }
 
 .home-category--pill {
-  margin-top: 0.5rem !important;
+  margin-block: 0.5rem !important;
   padding: 0.25rem 0.55rem;
   border-radius: 5px;
   background: var(--brand-soft);
@@ -120,7 +120,7 @@ a.home-category:hover {
 }
 
 .home-category--text {
-  margin-bottom: var(--space-2);
+  margin-bottom: .2rem;
 }
 
 /* ---- Author meta ---- */

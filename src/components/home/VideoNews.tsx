@@ -58,7 +58,7 @@ export const VideoNews: React.FC<VideoNewsProps> = ({ posts, popular }) => {
               autoPlay={autoPlay}
               poster={
                 lead.heroImage && typeof lead.heroImage === 'object' ? (
-                  <Media resource={lead.heroImage} imgClassName="mag-video-embed__img" />
+                  <Media resource={lead.heroImage} fill imgClassName="mag-video-embed__img" />
                 ) : (
                   <span className="mag-video-embed__placeholder" />
                 )

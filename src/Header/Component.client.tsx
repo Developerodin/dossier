@@ -1,7 +1,7 @@
 'use client'
 
 import { useHeaderTheme } from '@/providers/HeaderTheme'
-import { Menu, User } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -77,9 +77,6 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({
           <div className="site-header__actions mag-header__actions">
             <HeaderSearch variant="bar" />
             <HeaderSearch variant="icon" />
-            <Link href="/admin" className="site-header__icon-btn" aria-label="Admin login">
-              <User size={18} />
-            </Link>
             <button
               type="button"
               className="site-header__icon-btn site-header__burger"
