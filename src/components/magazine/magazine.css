@@ -403,6 +403,7 @@
 
 .mag-hero {
   padding-block: var(--space-6);
+  background: var(--brand);
 }
 
 .mag-hero__inner {
@@ -416,6 +417,8 @@
 .mag-hero__main {
   display: grid;
   gap: var(--space-4);
+  width: 100%;
+  height: 100%;
 }
 
 .mag-hero__slider {
@@ -497,7 +500,7 @@
 }
 
 .mag-hero__meta-cat {
-  color: var(--brand);
+  color: var(--brand-foreground);
   text-decoration: none;
   text-transform: uppercase;
 }
@@ -509,7 +512,7 @@
 .mag-hero__meta-date {
   position: relative;
   padding-left: 2rem;
-  color: var(--muted-text);
+  color: color-mix(in oklch, var(--brand-foreground) 80%, transparent);
   font-size: 0.875rem;
   text-transform: none;
 }
@@ -534,17 +537,19 @@
 }
 
 .mag-hero__title a {
-  color: var(--heading-text);
+  color: var(--brand-foreground);
   text-decoration: none;
 }
 
 .mag-hero__excerpt {
   margin: 0;
-  color: var(--muted-text);
+  color: color-mix(in oklch, var(--brand-foreground) 80%, transparent);
   line-height: 1.55;
 }
 
 .mag-hero__thumbs {
+  width: 100%;
+  height: 100%;
   display: flex;
   gap: 0.5rem;
   overflow-x: auto;
@@ -556,7 +561,7 @@
 }
 
 .mag-hero__thumb {
-  flex: 0 0 4.5rem;
+  flex: 0 0 6.2rem;
   padding: 0;
   border: 2px solid transparent;
   border-radius: 5px;
@@ -568,7 +573,7 @@
 }
 
 .mag-hero__thumb--active {
-  border-color: var(--brand);
+  border-color: var(--brand-foreground);
 }
 
 .mag-hero__thumb-img,
@@ -675,7 +680,7 @@
 
 @media (min-width: 64rem) {
   .mag-hero__inner {
-    grid-template-columns: 1fr 22rem;
+    grid-template-columns: 1fr 17rem;
     align-items: start;
   }
 
@@ -701,8 +706,8 @@
 
 @media (max-width: 63.99rem) {
   .mag-hero {
-    padding-top: 0rem !important;
-    padding-block: var(--space-4);
+    padding-top: 0 !important;
+    padding-bottom: var(--space-6);
   }
 
   .mag-hero__inner {
@@ -940,10 +945,6 @@
 .mag-trending-area__main .home-trending {
   padding-block: var(--space-5);
   border-radius: 5px;
-}
-
-.mag-trending-area__main .home-trending__inner {
-  padding-inline: 0;
 }
 
 .mag-trending-area .mag-follow .mag-widget-title,
@@ -1672,7 +1673,7 @@
 
 /* ---- Footer ---- */
 
-.mag-footer {
+.site-footer.mag-footer {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
@@ -1685,7 +1686,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.mag-footer__top-inner {
+.mag-footer .mag-footer__top-inner {
   display: grid;
   gap: var(--space-5);
   padding-block: var(--space-6);
@@ -1699,12 +1700,12 @@
   gap: var(--space-4);
 }
 
-.mag-footer__grid {
+.mag-footer .mag-footer__grid {
   display: block;
   width: 100%;
 }
 
-.mag-footer__columns {
+.mag-footer .mag-footer__columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-5);
@@ -1761,7 +1762,7 @@
   background-color: rgba(255, 255, 255, 0.08);
 }
 
-.mag-footer__copyright {
+.mag-footer .mag-footer__copyright {
   margin-top: var(--space-5);
   padding-top: var(--space-4);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
@@ -1778,7 +1779,7 @@
 
 /* Desktop only: four columns centered and inline */
 @media (min-width: 64rem) {
-  .mag-footer__columns {
+  .mag-footer .mag-footer__columns {
     grid-template-columns: repeat(4, max-content);
     justify-content: center;
     justify-items: start;
