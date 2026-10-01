@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import { Share2 } from 'lucide-react'
 
 import type { HomePostCard } from './types'
 import { Media } from '@/components/Media'
@@ -19,6 +20,9 @@ export const MostShareList: React.FC<MostShareListProps> = ({
   return (
     <aside className="mag-most-share" aria-labelledby="mag-most-share-title">
       <h3 id="mag-most-share-title" className="mag-widget-title">
+        <span className="mag-section-icon" aria-hidden="true">
+          <Share2 size={16} strokeWidth={2} />
+        </span>
         {title}
       </h3>
       <ol className="mag-most-share__list">

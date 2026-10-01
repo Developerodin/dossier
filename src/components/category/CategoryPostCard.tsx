@@ -11,6 +11,8 @@ type CategoryPostCardProps = {
   /** When set, use this label instead of the post's primary category */
   categoryLabel?: string | null
   categoryHref?: string | null
+  /** Hide category label (e.g. on individual category pages) */
+  hideCategory?: boolean
 }
 
 function CategoryLabel({
@@ -37,6 +39,7 @@ export const CategoryPostCard: React.FC<CategoryPostCardProps> = ({
   post,
   categoryLabel,
   categoryHref: categoryHrefProp,
+  hideCategory = false,
 }) => {
   const { title, slug, heroImage, categories, publishedAt, populatedAuthors } = post
   const href = `/posts/${slug}`
@@ -44,7 +47,9 @@ export const CategoryPostCard: React.FC<CategoryPostCardProps> = ({
   const primaryCategory =
     categories?.find((cat) => typeof cat === 'object' && cat !== null) ?? null
 
-  const categoryTitle = categoryLabel || primaryCategory?.title || null
+  const categoryTitle = hideCategory
+    ? null
+    : categoryLabel || primaryCategory?.title || null
   const categorySlug = primaryCategory?.slug ?? null
   const categoryHref =
     categoryHrefProp ?? (categorySlug ? `/categories/${categorySlug}` : null)

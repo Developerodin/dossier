@@ -17,7 +17,9 @@ export const MostViewFeed: React.FC<MostViewFeedProps> = ({ posts }) => {
       <div className="mag-most-view-feed__inner">
         <header className="mag-section-header">
           <h2 id="mag-most-view-feed-title" className="mag-section-header__title">
-            <Eye size={20} aria-hidden="true" />
+            <span className="mag-section-icon" aria-hidden="true">
+              <Eye size={18} strokeWidth={2} />
+            </span>
             Most View
           </h2>
           <Link href="/posts" className="mag-section-header__link">

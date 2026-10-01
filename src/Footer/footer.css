@@ -172,10 +172,23 @@
   gap: var(--site-gap);
   width: 100%;
   text-align: center;
+  justify-items: center;
+}
+
+.site-footer__columns .site-footer__col-title {
+  text-align: center;
 }
 
 .site-footer__columns .site-footer__links {
   align-items: center;
+}
+
+.site-footer__columns .mag-footer__follow {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .site-footer__socials {

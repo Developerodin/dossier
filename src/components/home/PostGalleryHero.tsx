@@ -112,30 +112,36 @@ export const PostGalleryHero: React.FC<PostGalleryHeroProps> = ({ posts, trendin
           </div>
 
           <div className="mag-hero__thumbs" aria-label="Featured story thumbnails">
-            {slides.map((post, index) => (
-              <button
-                key={post.id}
-                type="button"
-                className={`mag-hero__thumb${index === active ? ' mag-hero__thumb--active' : ''}`}
-                aria-label={`Show ${post.title}`}
-                aria-current={index === active}
-                onClick={() => setActive(index)}
-              >
-                {post.heroImage && typeof post.heroImage === 'object' ? (
-                  <Media
-                    resource={post.heroImage}
-                    fill
-                    imgClassName="mag-hero__thumb-img"
-                    size="6.2rem"
-                  />
-                ) : (
-                  <span className="mag-hero__thumb-fallback" />
-                )}
-                <span className="mag-hero__thumb-title" aria-hidden="true">
-                  <span className="mag-hero__thumb-title-text">{post.title}</span>
-                </span>
-              </button>
-            ))}
+            {slides.map((post, index) => {
+              const cat = getCategory(post)
+              return (
+                <Link
+                  key={post.id}
+                  href={`/posts/${post.slug}`}
+                  className={`mag-hero__thumb${index === active ? ' mag-hero__thumb--active' : ''}`}
+                  aria-label={post.title}
+                >
+                  {post.heroImage && typeof post.heroImage === 'object' ? (
+                    <Media
+                      resource={post.heroImage}
+                      fill
+                      imgClassName="mag-hero__thumb-img"
+                      size="10rem"
+                    />
+                  ) : (
+                    <span className="mag-hero__thumb-fallback" />
+                  )}
+                  {cat?.title && (
+                    <span className="mag-hero__thumb-badge" aria-hidden="true">
+                      {cat.title}
+                    </span>
+                  )}
+                  <span className="mag-hero__thumb-title" aria-hidden="true">
+                    <span className="mag-hero__thumb-title-text">{post.title}</span>
+                  </span>
+                </Link>
+              )
+            })}
           </div>
         </div>
 

@@ -1125,44 +1125,7 @@ export const seed = async ({
           customLink('Cybersecurity', '/categories/cybersecurity'),
           customLink('Latest', '/posts'),
         ],
-        sidebarGroups: [
-          {
-            label: 'Topics',
-            links: [
-              customLink('Artificial Intelligence', '/categories/ai'),
-              customLink('Cloud', '/categories/cloud'),
-              customLink('Gadgets', '/categories/gadgets'),
-            ],
-          },
-          {
-            label: 'Startups',
-            links: [
-              customLink('Funding', '/categories/funding'),
-              customLink('Founders'),
-              customLink('Exits'),
-            ],
-          },
-          {
-            label: 'Cybersecurity',
-            links: [
-              customLink('Breaches', '/categories/cybersecurity'),
-              customLink('Privacy'),
-              customLink('Policy'),
-            ],
-          },
-          {
-            label: 'Company',
-            links: [customLink('About'), customLink('Careers'), customLink('Advertise')],
-          },
-          {
-            label: 'Resources',
-            links: [
-              customLink('Newsletters'),
-              customLink('Events'),
-              customLink('Reports'),
-            ],
-          },
-        ],
+        sidebarGroups: [],
       },
     }),
     payload.updateGlobal({
@@ -1174,10 +1137,8 @@ export const seed = async ({
       data: {
         copyright: '© 2026 dossier.',
         quickLinks: [
-          customLink('About'),
+          customLink('About', '/about'),
           customLink('Contact', '/contact'),
-          customLink('Advertise'),
-          customLink('Careers'),
         ],
         popularPages: [
           customLink('AI', '/categories/ai'),

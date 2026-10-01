@@ -71,7 +71,6 @@ export default async function Post({ params: paramsPromise }: Args) {
     ])
 
   const shareUrl = `${getServerSideURL()}${url}`
-  const related = post.relatedPosts?.filter((item): item is Post => typeof item === 'object') ?? []
   const primaryCategory = getPrimaryCategory(post.categories)
 
   return (
@@ -102,7 +101,6 @@ export default async function Post({ params: paramsPromise }: Args) {
         mostShared={mostShared}
         prevPost={adjacent.prev}
         nextPost={adjacent.next}
-        relatedPosts={related}
         newsletterFormId={newsletterFormId}
         socialLinks={footerData?.socialLinks}
         sidebarAd={headerData?.sidebarAd}

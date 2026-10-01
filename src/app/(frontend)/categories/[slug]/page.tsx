@@ -55,6 +55,7 @@ export default async function CategoryPage({ params: paramsPromise }: Args) {
           posts={posts}
           categoryLabel={category.title}
           categoryHref={`/categories/${category.slug}`}
+          hideCategory
         />
         {totalPages > 1 && page && (
           <Pagination page={page} totalPages={totalPages} basePath={paginationBase} />

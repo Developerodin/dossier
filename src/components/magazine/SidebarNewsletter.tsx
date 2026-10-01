@@ -1,6 +1,7 @@
 'use client'
 
 import { submitFormSubmission } from '@/utilities/submitFormSubmission'
+import { Mail } from 'lucide-react'
 import React, { FormEvent, useState } from 'react'
 
 type SidebarNewsletterProps = {
@@ -55,7 +56,12 @@ export const SidebarNewsletter: React.FC<SidebarNewsletterProps> = ({ formId, co
 
   return (
     <aside className={`mag-sidebar-newsletter${compact ? ' mag-sidebar-newsletter--compact' : ''}`}>
-      <h3 className="mag-widget-title">Newsletter</h3>
+      <h3 className="mag-widget-title">
+        <span className="mag-section-icon" aria-hidden="true">
+          <Mail size={16} strokeWidth={2} />
+        </span>
+        Newsletter
+      </h3>
       <p className="mag-sidebar-newsletter__desc">
         Your email address will not be published. Required fields are marked.
       </p>

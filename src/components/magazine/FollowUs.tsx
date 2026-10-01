@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import { Users } from 'lucide-react'
 
 import type { Footer } from '@/payload-types'
 import {
@@ -18,6 +19,9 @@ export const FollowUs: React.FC<FollowUsProps> = ({ socialLinks }) => {
   return (
     <aside className="mag-follow" aria-labelledby="mag-follow-title">
       <h3 id="mag-follow-title" className="mag-widget-title">
+        <span className="mag-section-icon" aria-hidden="true">
+          <Users size={16} strokeWidth={2} />
+        </span>
         Follow us
       </h3>
       <ul className="mag-follow__grid">

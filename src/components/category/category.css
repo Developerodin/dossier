@@ -158,6 +158,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
+  border-radius: 5px;
   background: var(--surface-muted);
   text-decoration: none;
 }

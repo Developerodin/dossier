@@ -6,65 +6,31 @@ import React, { cache } from 'react'
 
 import { resolveHeaderData } from './defaults'
 
-const queryTickerItems = cache(async () => {
+const querySidebarCategories = cache(async () => {
   const payload = await getPayload({ config: configPromise })
-
-  const [breaking, trending] = await Promise.all([
-    payload.find({
-      collection: 'posts',
-      depth: 0,
-      limit: 6,
-      pagination: false,
-      select: { title: true, slug: true },
-      sort: '-publishedAt',
-      where: {
-        and: [{ breakingNews: { equals: true } }, { _status: { equals: 'published' } }],
-      },
-    }),
-    payload.find({
-      collection: 'posts',
-      depth: 0,
-      limit: 6,
-      pagination: false,
-      select: { title: true, slug: true },
-      sort: '-publishedAt',
-      where: {
-        and: [{ 'categories.slug': { equals: 'trending' } }, { _status: { equals: 'published' } }],
-      },
-    }),
-  ])
-
-  const seen = new Set<number>()
-  const merged = [...breaking.docs, ...trending.docs].filter((doc) => {
-    if (seen.has(doc.id)) return false
-    seen.add(doc.id)
-    return true
+  const result = await payload.find({
+    collection: 'categories',
+    depth: 0,
+    limit: 100,
+    pagination: false,
+    select: { title: true, slug: true },
+    sort: 'title',
   })
 
-  return merged.slice(0, 8)
+  return result.docs
+    .filter((doc): doc is typeof doc & { slug: string } => Boolean(doc.slug))
+    .map((doc) => ({
+      id: doc.id,
+      title: doc.title,
+      slug: doc.slug,
+    }))
 })
 
 export async function Header() {
-  const [headerData, tickerItems] = await Promise.all([
+  const [headerData, categories] = await Promise.all([
     getCachedGlobal('header', 1)(),
-    queryTickerItems(),
+    querySidebarCategories(),
   ])
 
-  const now = new Date()
-  const dateTime = now.toISOString().slice(0, 10)
-  const dateLabel = new Intl.DateTimeFormat('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(now)
-
-  return (
-    <HeaderClient
-      data={resolveHeaderData(headerData)}
-      tickerItems={tickerItems}
-      dateTime={dateTime}
-      dateLabel={dateLabel}
-    />
-  )
+  return <HeaderClient data={resolveHeaderData(headerData)} categories={categories} />
 }

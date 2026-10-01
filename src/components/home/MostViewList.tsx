@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import { Eye } from 'lucide-react'
 
 import type { HomePostCard } from './types'
 import { Media } from '@/components/Media'
@@ -19,6 +20,9 @@ export const MostViewList: React.FC<MostViewListProps> = ({
   return (
     <aside className="mag-most-view" aria-labelledby="mag-most-view-title">
       <h3 id="mag-most-view-title" className="mag-widget-title">
+        <span className="mag-section-icon" aria-hidden="true">
+          <Eye size={16} strokeWidth={2} />
+        </span>
         {title}
       </h3>
       <ol className="mag-most-view__list">

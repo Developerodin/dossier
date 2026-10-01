@@ -11,14 +11,12 @@ const customLink = (label: string, url = '#') => ({
 export const defaultFooterData: Omit<Footer, 'id' | 'updatedAt' | 'createdAt'> = {
   copyright: '© 2026 dossier.',
   quickLinks: [
-    customLink('About'),
+    customLink('About', '/about'),
     customLink('Contact', '/contact'),
-    customLink('Advertise'),
-    customLink('Careers'),
   ],
   popularPages: [
-    customLink('AI'),
-    customLink('Startups'),
+    customLink('AI', '/categories/ai'),
+    customLink('Startups', '/categories/startups'),
     customLink('Cybersecurity', '/categories/cybersecurity'),
     customLink('Latest', '/posts'),
   ],
@@ -62,6 +60,16 @@ export function resolveFooterData(data: Footer | null | undefined): Footer {
           },
         }
       }
+      if (label === 'about' && (!item.link?.url || item.link.url === '#')) {
+        return {
+          ...item,
+          link: {
+            ...item.link,
+            type: 'custom' as const,
+            url: '/about',
+          },
+        }
+      }
       return item
     })
   }
@@ -69,7 +77,13 @@ export function resolveFooterData(data: Footer | null | undefined): Footer {
   return {
     id: data?.id ?? 0,
     copyright: data?.copyright || defaultFooterData.copyright,
-    quickLinks: normalizeLinks(data?.quickLinks, defaultFooterData.quickLinks || []),
+    quickLinks: normalizeLinks(
+      (data?.quickLinks || []).filter((item) => {
+        const label = item.link?.label?.toLowerCase()
+        return label !== 'careers' && label !== 'advertise'
+      }),
+      defaultFooterData.quickLinks || [],
+    ),
     popularPages: data?.popularPages?.length ? data.popularPages : defaultFooterData.popularPages,
     contact: {
       heading: data?.contact?.heading || defaultFooterData.contact?.heading,

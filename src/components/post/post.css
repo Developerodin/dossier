@@ -336,25 +336,6 @@
   }
 }
 
-.mag-post__related {
-  margin-top: var(--space-8);
-}
-
-.mag-post__related-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.75rem;
-}
-
-.mag-post__related-list a {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--heading-text);
-  text-decoration: none;
-}
-
 .mag-post__sidebar {
   display: grid;
   gap: var(--space-6);

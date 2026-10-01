@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import type { Header } from '@/payload-types'
-import type { BreakingNewsItem } from '@/components/home/types'
 
 import { Logo } from '@/components/Logo/Logo'
 // TODO: re-enable header ad
@@ -15,25 +14,17 @@ import { Logo } from '@/components/Logo/Logo'
 import { resolveHeaderData } from './defaults'
 import { HeaderNav } from './Nav'
 import { HeaderSearch } from './Search'
-import { HeaderSidebar } from './Sidebar'
-import { HeaderTicker } from './HeaderTicker'
+import { HeaderSidebar, type SidebarCategory } from './Sidebar'
 
 import './header.css'
 import '@/components/magazine/magazine.css'
 
 interface HeaderClientProps {
   data: Header
-  tickerItems: BreakingNewsItem[]
-  dateTime: string
-  dateLabel: string
+  categories: SidebarCategory[]
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({
-  data,
-  tickerItems,
-  dateTime,
-  dateLabel,
-}) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ data, categories }) => {
   const [theme, setTheme] = useState<string | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
@@ -55,15 +46,6 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({
 
   return (
     <>
-      <div className="mag-header__top">
-        <div className="mag-header__top-inner">
-          <HeaderTicker items={tickerItems} />
-          <time className="mag-header__date" dateTime={dateTime}>
-            {dateLabel}
-          </time>
-        </div>
-      </div>
-
       <header
         className="mag-header mag-header__menu site-header"
         {...(theme ? { 'data-theme': theme } : {})}
@@ -90,11 +72,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({
         </div>
       </header>
 
-      <HeaderSidebar
-        open={sidebarOpen}
-        onClose={closeSidebar}
-        groups={resolved.sidebarGroups || []}
-      />
+      <HeaderSidebar open={sidebarOpen} onClose={closeSidebar} categories={categories} />
     </>
   )
 }

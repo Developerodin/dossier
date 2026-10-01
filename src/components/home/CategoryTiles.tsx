@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import { LayoutGrid } from 'lucide-react'
 
 import { getCategoryIcon } from './categoryIcons'
 import type { ExploreCategory } from './queryExploreCategories'
@@ -14,6 +15,9 @@ export const CategoryTiles: React.FC<CategoryTilesProps> = ({ categories }) => {
   return (
     <aside className="mag-category-tiles" aria-labelledby="mag-category-tiles-title">
       <h3 id="mag-category-tiles-title" className="mag-widget-title">
+        <span className="mag-section-icon" aria-hidden="true">
+          <LayoutGrid size={16} strokeWidth={2} />
+        </span>
         Categories
       </h3>
       <ul className="mag-category-tiles__grid">

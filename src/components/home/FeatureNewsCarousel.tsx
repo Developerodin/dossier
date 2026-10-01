@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import { Newspaper } from 'lucide-react'
 
 import type { HomePostCard } from './types'
 import { CarouselSlide, ScrollCarousel } from '@/components/magazine/ScrollCarousel'
@@ -18,6 +19,9 @@ export const FeatureNewsCarousel: React.FC<FeatureNewsCarouselProps> = ({ posts 
       <div className="mag-feature-news__inner">
         <header className="mag-section-header">
           <h2 id="mag-feature-news-title" className="mag-section-header__title">
+            <span className="mag-section-icon" aria-hidden="true">
+              <Newspaper size={18} strokeWidth={2} />
+            </span>
             Feature News
           </h2>
           <Link href="/posts" className="mag-section-header__link">

@@ -4,10 +4,8 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import type { BreakingNewsItem } from '@/components/home/types'
-
 type HeaderTickerProps = {
-  items: BreakingNewsItem[]
+  items: Array<{ id: number; title: string; slug?: string | null }>
 }
 
 export const HeaderTicker: React.FC<HeaderTickerProps> = ({ items }) => {
@@ -31,11 +29,11 @@ export const HeaderTicker: React.FC<HeaderTickerProps> = ({ items }) => {
       <span className="mag-header-ticker__label">Trending :</span>
       <div className="mag-header-ticker__track">
         {items.map((item, i) => (
-          <Link
-            key={item.id}
-            href={`/posts/${item.slug}`}
-            className={`mag-header-ticker__item${i === index ? ' mag-header-ticker__item--active' : ''}`}
-          >
+              <Link
+                key={item.id}
+                href={`/posts/${item.slug}`}
+                className={`mag-header-ticker__item${i === index ? ' mag-header-ticker__item--active' : ''}`}
+              >
             {item.title}
           </Link>
         ))}

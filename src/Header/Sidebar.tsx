@@ -1,29 +1,26 @@
 'use client'
 
-import { ChevronDown, ChevronUp, X } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import { X } from 'lucide-react'
+import Link from 'next/link'
+import React, { useEffect } from 'react'
 
-import type { Header as HeaderType } from '@/payload-types'
-
-import { CMSLink } from '@/components/Link'
 import { ThemeToggle } from '@/providers/Theme/ThemeToggle'
 
-type SidebarGroup = NonNullable<HeaderType['sidebarGroups']>[number]
+export type SidebarCategory = {
+  id: number
+  title: string
+  slug: string
+}
 
 type HeaderSidebarProps = {
   open: boolean
   onClose: () => void
-  groups: SidebarGroup[]
+  categories: SidebarCategory[]
 }
 
-export const HeaderSidebar: React.FC<HeaderSidebarProps> = ({ open, onClose, groups }) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
-
+export const HeaderSidebar: React.FC<HeaderSidebarProps> = ({ open, onClose, categories }) => {
   useEffect(() => {
-    if (!open) {
-      setOpenIndex(null)
-      return
-    }
+    if (!open) return
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
@@ -62,41 +59,31 @@ export const HeaderSidebar: React.FC<HeaderSidebarProps> = ({ open, onClose, gro
           </button>
         </div>
 
-        <div className="site-sidebar__groups">
-          {groups.map((group, index) => {
-            const isOpen = openIndex === index
-            return (
-              <div
-                key={group.id ?? `${group.label}-${index}`}
-                className={`site-sidebar__group${isOpen ? ' is-open' : ''}`}
-              >
-                <button
-                  type="button"
-                  className="site-sidebar__toggle"
-                  aria-expanded={isOpen}
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
+        <nav className="site-sidebar__nav" aria-label="Categories">
+          <p className="site-sidebar__section-label">Categories</p>
+          <ul className="site-sidebar__list">
+            {categories.map((category) => (
+              <li key={category.id}>
+                <Link
+                  href={`/categories/${category.slug}`}
+                  className="site-sidebar__link"
+                  onClick={onClose}
                 >
-                  <span>{group.label}</span>
-                  {isOpen ? (
-                    <ChevronUp className="site-sidebar__chevron" aria-hidden />
-                  ) : (
-                    <ChevronDown className="site-sidebar__chevron" aria-hidden />
-                  )}
-                </button>
-                <div className="site-sidebar__links">
-                  {(group.links || []).map(({ link }, linkIndex) => (
-                    <CMSLink
-                      key={linkIndex}
-                      {...link}
-                      appearance="inline"
-                      className="site-sidebar__link"
-                    />
-                  ))}
-                </div>
-              </div>
-            )
-          })}
-        </div>
+                  {category.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <p className="site-sidebar__section-label">More</p>
+          <ul className="site-sidebar__list">
+            <li>
+              <Link href="/contact" className="site-sidebar__link" onClick={onClose}>
+                Contact
+              </Link>
+            </li>
+          </ul>
+        </nav>
 
         <div className="site-sidebar__theme-wrap">
           <ThemeToggle labeled />

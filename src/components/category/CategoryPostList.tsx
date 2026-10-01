@@ -7,12 +7,14 @@ type CategoryPostListProps = {
   posts: CategoryPostCardData[]
   categoryLabel?: string | null
   categoryHref?: string | null
+  hideCategory?: boolean
 }
 
 export const CategoryPostList: React.FC<CategoryPostListProps> = ({
   posts,
   categoryLabel,
   categoryHref,
+  hideCategory = false,
 }) => {
   if (!posts.length) {
     return <p className="category-post-list__empty">No posts in this category yet.</p>
@@ -26,6 +28,7 @@ export const CategoryPostList: React.FC<CategoryPostListProps> = ({
             post={post}
             categoryLabel={categoryLabel}
             categoryHref={categoryHref}
+            hideCategory={hideCategory}
           />
         </li>
       ))}

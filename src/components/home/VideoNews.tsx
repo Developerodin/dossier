@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
+import { PlayCircle, Film, Flame } from 'lucide-react'
 
 import type { HomePostCard } from './types'
 import { GalleryListItem } from '@/components/magazine/ScrollCarousel'
@@ -44,6 +45,9 @@ export const VideoNews: React.FC<VideoNewsProps> = ({ posts, popular }) => {
       <div className="mag-video-news__inner">
         <header className="mag-section-header mag-section-header--dark">
           <h2 id="mag-video-news-title" className="mag-section-header__title">
+            <span className="mag-section-icon" aria-hidden="true">
+              <PlayCircle size={18} strokeWidth={2} />
+            </span>
             Video News
           </h2>
         </header>
@@ -76,7 +80,16 @@ export const VideoNews: React.FC<VideoNewsProps> = ({ posts, popular }) => {
           </article>
 
           <aside className="mag-video-news__sidebar">
-            <h3 className="mag-widget-title">{sidebarTitle}</h3>
+            <h3 className="mag-widget-title">
+              <span className="mag-section-icon" aria-hidden="true">
+                {useVideoSidebar ? (
+                  <Film size={16} strokeWidth={2} />
+                ) : (
+                  <Flame size={16} strokeWidth={2} />
+                )}
+              </span>
+              {sidebarTitle}
+            </h3>
             <ol className="mag-video-news__list">
               {sidebarPosts.map((post, index) => {
                 const label = getCategoryLabel(post)?.title

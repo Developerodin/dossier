@@ -7,8 +7,10 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import { homeStatic } from '@/endpoints/seed/home-static'
 import { contactStatic } from '@/endpoints/seed/contact-static'
+import { aboutStatic } from '@/endpoints/seed/about-static'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { AboutPage } from '@/components/about'
 import { ContactPage } from '@/components/contact'
 import { HomePage } from '@/components/home'
 import { RenderHero } from '@/heros/RenderHero'
@@ -70,6 +72,10 @@ export default async function Page({ params: paramsPromise }: Args) {
     page = contactStatic
   }
 
+  if (!page && slug === 'about') {
+    page = aboutStatic
+  }
+
   if (!page) {
     return <PayloadRedirects url={url} />
   }
@@ -77,7 +83,13 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { hero, layout } = page
 
   return (
-    <article className={decodedSlug === 'home' || decodedSlug === 'contact' ? undefined : 'pb-8'}>
+    <article
+      className={
+        decodedSlug === 'home' || decodedSlug === 'contact' || decodedSlug === 'about'
+          ? undefined
+          : 'pb-8'
+      }
+    >
       <PageClient />
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
@@ -88,6 +100,8 @@ export default async function Page({ params: paramsPromise }: Args) {
         <HomePage />
       ) : decodedSlug === 'contact' ? (
         <ContactPage />
+      ) : decodedSlug === 'about' ? (
+        <AboutPage />
       ) : (
         <>
           <RenderHero {...hero} />
@@ -107,7 +121,13 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   })
 
   return generateMeta({
-    doc: page ?? (decodedSlug === 'contact' ? contactStatic : null),
+    doc:
+      page ??
+      (decodedSlug === 'contact'
+        ? contactStatic
+        : decodedSlug === 'about'
+          ? aboutStatic
+          : null),
     path: decodedSlug === 'home' ? '/' : `/${decodedSlug}`,
   })
 }

@@ -73,37 +73,6 @@ export async function Footer() {
                 ))}
               </ul>
             </div>
-            <div>
-              <p className="site-footer__col-title">{data.contact?.heading || 'Contact us'}</p>
-              <ul className="site-footer__contact-list">
-                {data.contact?.email ? (
-                  <li>
-                    <a className="site-footer__link" href={`mailto:${data.contact.email}`}>
-                      {data.contact.email}
-                    </a>
-                  </li>
-                ) : null}
-                {data.contact?.phone ? (
-                  <li>
-                    <a className="site-footer__link" href={`tel:${data.contact.phone}`}>
-                      {data.contact.phone}
-                    </a>
-                  </li>
-                ) : null}
-                <li>
-                  <a
-                    className="site-footer__link"
-                    href={
-                      data.contact?.url && data.contact.url !== '#'
-                        ? data.contact.url
-                        : '/contact'
-                    }
-                  >
-                    Contact page
-                  </a>
-                </li>
-              </ul>
-            </div>
             <div className="mag-footer__follow">
               <p className="site-footer__col-title">Follow us</p>
               <ul className="mag-follow__grid">

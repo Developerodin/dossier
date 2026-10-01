@@ -27,7 +27,6 @@ type PostArticleProps = {
   mostShared: HomePostCard[]
   prevPost?: { title: string; slug: string } | null
   nextPost?: { title: string; slug: string } | null
-  relatedPosts?: Post[]
   newsletterFormId?: string | number | null
   socialLinks?: Parameters<typeof FollowUs>[0]['socialLinks']
   sidebarAd?: {
@@ -45,7 +44,6 @@ export const PostArticle: React.FC<PostArticleProps> = ({
   mostShared,
   prevPost,
   nextPost,
-  relatedPosts = [],
   newsletterFormId,
   socialLinks,
   sidebarAd,
@@ -158,21 +156,6 @@ export const PostArticle: React.FC<PostArticleProps> = ({
                 </Link>
               ) : null}
             </nav>
-          )}
-
-          {relatedPosts.length > 0 && (
-            <section className="mag-post__related" aria-labelledby="mag-post-related-title">
-              <h2 id="mag-post-related-title" className="mag-widget-title">
-                Our latest news
-              </h2>
-              <ul className="mag-post__related-list">
-                {relatedPosts.map((related) => (
-                  <li key={related.id}>
-                    <Link href={`/posts/${related.slug}`}>{related.title}</Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
           )}
         </div>
 
