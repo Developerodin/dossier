@@ -26,17 +26,21 @@ function PostMeta({ post }: { post: HomePostCard }) {
 
   return (
     <div className="mag-category-block__meta-wrap">
-      {categoryTitle && (
-        <CategoryBadge label={categoryTitle} href={categoryHref} variant="pill" />
-      )}
+      {categoryTitle && <CategoryBadge label={categoryTitle} href={categoryHref} variant="pill" />}
       <p className="mag-category-block__meta">
         {relativeTime && <span>{relativeTime}</span>}
-        {relativeTime && <span className="mag-category-block__meta-dot" aria-hidden="true">•</span>}
+        {relativeTime && (
+          <span className="mag-category-block__meta-dot" aria-hidden="true">
+            •
+          </span>
+        )}
         <span className="mag-category-block__stat">
           <Share2 className="mag-category-block__stat-icon" aria-hidden="true" />
           {formatCount(shares)} shares
         </span>
-        <span className="mag-category-block__meta-dot" aria-hidden="true">•</span>
+        <span className="mag-category-block__meta-dot" aria-hidden="true">
+          •
+        </span>
         <span className="mag-category-block__stat">
           <Eye className="mag-category-block__stat-icon" aria-hidden="true" />
           {formatCount(views)} views
@@ -62,7 +66,7 @@ export const CategoryNewsBlock: React.FC<CategoryNewsBlockProps> = ({ title, slu
           {title}
         </h2>
         <Link href={`/categories/${slug}`} className="mag-category-block__link">
-          See all
+          View all
         </Link>
       </header>
 

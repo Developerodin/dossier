@@ -74,7 +74,7 @@ export const EditorsPicks: React.FC<EditorsPicksProps> = ({ posts }) => {
             </p>
           </div>
           <Link href="/posts" className="home-editors__footer-link">
-            See all picks
+            View all
             <ArrowRight className="home-editors__footer-link-icon" aria-hidden="true" />
           </Link>
         </div>

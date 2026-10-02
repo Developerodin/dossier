@@ -413,10 +413,14 @@ a.home-category:hover {
 .home-trending__view-all {
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 0.25rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-md);
+  background: var(--brand);
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--brand);
+  color: var(--brand-foreground);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -902,9 +906,9 @@ a.home-category:hover {
   gap: var(--space-2);
   margin-block-start: var(--space-1);
   padding: 0.7rem 1.15rem;
-  border-radius: 999px;
-  background: var(--heading-text);
-  color: var(--surface);
+  border-radius: var(--radius-md);
+  background: var(--brand);
+  color: var(--brand-foreground);
   font-size: 0.875rem;
   font-weight: 600;
   text-decoration: none;
@@ -1443,6 +1447,37 @@ a.home-category:hover {
   font-size: 0.9375rem;
   line-height: 1.55;
   color: var(--muted-text);
+}
+
+@media (max-width: 47.99rem) {
+  .home-newsletter__copy {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--space-3);
+    row-gap: var(--space-2);
+    align-items: center;
+  }
+
+  .home-newsletter__icon-wrap {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .home-newsletter__text,
+  .home-newsletter__title {
+    display: contents;
+  }
+
+  .home-newsletter__title-line {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .home-newsletter__title-accent,
+  .home-newsletter__subtitle {
+    grid-column: 1 / -1;
+  }
 }
 
 .home-newsletter__action {
@@ -2073,21 +2108,24 @@ a.home-category:hover {
   align-items: center;
   gap: var(--space-1);
   align-self: flex-start;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-md);
+  background: var(--brand);
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--brand);
+  color: var(--brand-foreground);
   text-decoration: none;
   white-space: nowrap;
 }
 
 .home-editors__footer-link:hover {
-  text-decoration: underline;
+  opacity: 0.92;
 }
 
 .home-editors__footer-link:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand) 30%, transparent);
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
 }
 
 .home-editors__footer-link-icon {
