@@ -10,10 +10,7 @@ const customLink = (label: string, url = '#') => ({
 
 export const defaultFooterData: Omit<Footer, 'id' | 'updatedAt' | 'createdAt'> = {
   copyright: '© 2026 dossier.',
-  quickLinks: [
-    customLink('About', '/about'),
-    customLink('Contact', '/contact'),
-  ],
+  quickLinks: [customLink('About', '/about'), customLink('Contact', '/contact')],
   popularPages: [
     customLink('AI', '/categories/ai'),
     customLink('Startups', '/categories/startups'),
@@ -43,7 +40,9 @@ export function resolveFooterData(data: Footer | null | undefined): Footer {
   const resolveContactUrl = (url?: string | null) =>
     url && url !== '#' ? url : defaultFooterData.contact?.url
 
-  const normalizeLinks = <T extends { link?: { label?: string | null; url?: string | null; type?: string | null } }>(
+  const normalizeLinks = <
+    T extends { link?: { label?: string | null; url?: string | null; type?: string | null } },
+  >(
     links: T[] | null | undefined,
     fallback: T[],
   ): T[] => {
