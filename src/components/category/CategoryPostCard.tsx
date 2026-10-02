@@ -44,15 +44,11 @@ export const CategoryPostCard: React.FC<CategoryPostCardProps> = ({
   const { title, slug, heroImage, categories, publishedAt, populatedAuthors } = post
   const href = `/posts/${slug}`
 
-  const primaryCategory =
-    categories?.find((cat) => typeof cat === 'object' && cat !== null) ?? null
+  const primaryCategory = categories?.find((cat) => typeof cat === 'object' && cat !== null) ?? null
 
-  const categoryTitle = hideCategory
-    ? null
-    : categoryLabel || primaryCategory?.title || null
+  const categoryTitle = hideCategory ? null : categoryLabel || primaryCategory?.title || null
   const categorySlug = primaryCategory?.slug ?? null
-  const categoryHref =
-    categoryHrefProp ?? (categorySlug ? `/categories/${categorySlug}` : null)
+  const categoryHref = categoryHrefProp ?? (categorySlug ? `/categories/${categorySlug}` : null)
 
   const hasAuthors =
     populatedAuthors &&
@@ -80,7 +76,7 @@ export const CategoryPostCard: React.FC<CategoryPostCardProps> = ({
               resource={heroImage}
               fill
               imgClassName="category-post-card__image"
-              size="(max-width: 768px) 40vw, 280px"
+              size="(max-width: 767px) 160px, (max-width: 1023px) 240px, 280px"
             />
           ) : (
             <div className="category-post-card__placeholder" />
@@ -106,9 +102,7 @@ export const CategoryPostCard: React.FC<CategoryPostCardProps> = ({
                   –
                 </span>
               )}
-              {relativeTime && (
-                <time dateTime={publishedAt ?? undefined}>{relativeTime}</time>
-              )}
+              {relativeTime && <time dateTime={publishedAt ?? undefined}>{relativeTime}</time>}
             </p>
           )}
         </div>

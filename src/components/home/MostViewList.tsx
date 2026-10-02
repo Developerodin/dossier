@@ -11,10 +11,7 @@ type MostViewListProps = {
   title?: string
 }
 
-export const MostViewList: React.FC<MostViewListProps> = ({
-  posts,
-  title = 'Most View',
-}) => {
+export const MostViewList: React.FC<MostViewListProps> = ({ posts, title = 'Most View' }) => {
   if (!posts.length) return null
 
   return (
@@ -39,7 +36,8 @@ export const MostViewList: React.FC<MostViewListProps> = ({
                       resource={post.heroImage}
                       fill
                       imgClassName="mag-most-view__img"
-                      size="2.75rem"
+                      payloadSize="small"
+                      size="192px"
                     />
                   </Link>
                 )}
@@ -48,7 +46,9 @@ export const MostViewList: React.FC<MostViewListProps> = ({
                   <h4 className="mag-most-view__title">
                     <Link href={`/posts/${post.slug}`}>{post.title}</Link>
                   </h4>
-                  <span className="mag-most-view__views">{formatCount(post.viewCount ?? 0)} views</span>
+                  <span className="mag-most-view__views">
+                    {formatCount(post.viewCount ?? 0)} views
+                  </span>
                 </div>
               </article>
             </li>

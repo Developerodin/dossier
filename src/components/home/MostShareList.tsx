@@ -11,10 +11,7 @@ type MostShareListProps = {
   title?: string
 }
 
-export const MostShareList: React.FC<MostShareListProps> = ({
-  posts,
-  title = 'Most Share',
-}) => {
+export const MostShareList: React.FC<MostShareListProps> = ({ posts, title = 'Most Share' }) => {
   if (!posts.length) return null
 
   return (
@@ -50,7 +47,8 @@ export const MostShareList: React.FC<MostShareListProps> = ({
                       resource={post.heroImage}
                       fill
                       imgClassName="mag-most-share__img"
-                      size="2.75rem"
+                      payloadSize="small"
+                      size="192px"
                     />
                   </Link>
                 )}

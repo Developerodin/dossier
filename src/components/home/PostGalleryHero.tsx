@@ -126,7 +126,8 @@ export const PostGalleryHero: React.FC<PostGalleryHeroProps> = ({ posts, trendin
                       resource={post.heroImage}
                       fill
                       imgClassName="mag-hero__thumb-img"
-                      size="10rem"
+                      payloadSize="small"
+                      size="280px"
                     />
                   ) : (
                     <span className="mag-hero__thumb-fallback" />

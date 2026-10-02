@@ -19,11 +19,7 @@ function formatRank(rank: number): string {
   return String(rank).padStart(2, '0')
 }
 
-export const TrendingCard: React.FC<TrendingCardProps> = ({
-  post,
-  rank,
-  variant = 'desktop',
-}) => {
+export const TrendingCard: React.FC<TrendingCardProps> = ({ post, rank, variant = 'desktop' }) => {
   const { title, slug, heroImage, publishedAt, viewCount } = post
   const href = `/posts/${slug}`
   const topic = getTopicCategory(post)
@@ -45,7 +41,8 @@ export const TrendingCard: React.FC<TrendingCardProps> = ({
             resource={heroImage}
             fill
             imgClassName="home-trending-card__image"
-            size={variant === 'mobile' ? '120px' : '280px'}
+            payloadSize={variant === 'mobile' ? 'small' : 'medium'}
+            size={variant === 'mobile' ? '220px' : '384px'}
           />
         ) : (
           <div className="home-trending-card__placeholder" />
@@ -57,10 +54,7 @@ export const TrendingCard: React.FC<TrendingCardProps> = ({
 
       <div className="home-trending-card__body">
         {topic?.title && (
-          <Link
-            href={categoryHref ?? href}
-            className="home-trending-card__category"
-          >
+          <Link href={categoryHref ?? href} className="home-trending-card__category">
             {topic.title}
           </Link>
         )}

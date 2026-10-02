@@ -99,7 +99,8 @@ export const VideoNews: React.FC<VideoNewsProps> = ({ posts, popular }) => {
                       resource={post.heroImage}
                       fill
                       imgClassName="mag-gallery-item__img"
-                      size="4rem"
+                      payloadSize="small"
+                      size="96px"
                     />
                   ) : (
                     <span className="mag-gallery-item__placeholder" />

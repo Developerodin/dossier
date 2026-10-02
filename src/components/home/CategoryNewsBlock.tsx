@@ -100,7 +100,8 @@ export const CategoryNewsBlock: React.FC<CategoryNewsBlockProps> = ({ title, slu
                       resource={post.heroImage}
                       fill
                       imgClassName="mag-category-block__item-img"
-                      size="6rem"
+                      payloadSize="small"
+                      size="128px"
                     />
                   ) : (
                     <span className="mag-category-block__placeholder" />

@@ -15,8 +15,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ post, className }) => 
   const { title, slug, heroImage, categories, publishedAt, readingTime } = post
   const href = `/posts/${slug}`
 
-  const primaryCategory =
-    categories?.find((cat) => typeof cat === 'object' && cat !== null) ?? null
+  const primaryCategory = categories?.find((cat) => typeof cat === 'object' && cat !== null) ?? null
   const categoryTitle = primaryCategory?.title ?? null
   const categoryHref = primaryCategory?.slug ? `/categories/${primaryCategory.slug}` : null
 
@@ -28,7 +27,12 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ post, className }) => 
     <article className={['home-article-card', className].filter(Boolean).join(' ')}>
       <Link href={href} className="home-article-card__media" tabIndex={-1} aria-hidden="true">
         {heroImage && typeof heroImage === 'object' ? (
-          <Media resource={heroImage} fill imgClassName="home-article-card__image" size="33vw" />
+          <Media
+            resource={heroImage}
+            fill
+            imgClassName="home-article-card__image"
+            size="(max-width: 768px) 100vw, 33vw"
+          />
         ) : (
           <div className="home-article-card__placeholder" />
         )}

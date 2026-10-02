@@ -98,12 +98,13 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
 
   const loading = loadingFromProps || (!priority ? 'lazy' : undefined)
 
-  // NOTE: this is used by the browser to determine which image to download at different screen sizes
+  // Browser uses this to pick a srcset candidate. Lengths must be px/vw — a `w` descriptor is invalid here and is ignored.
   const sizes = sizeFromProps
     ? sizeFromProps
-    : Object.entries(breakpoints)
-        .map(([, value]) => `(max-width: ${value}px) ${value * 2}w`)
-        .join(', ')
+    : `${Object.entries(breakpoints)
+        .sort(([, a], [, b]) => a - b)
+        .map(([, value]) => `(max-width: ${value}px) ${value}px`)
+        .join(', ')}, 100vw`
 
   return (
     <picture className={cn(fill && 'relative block size-full', pictureClassName)}>

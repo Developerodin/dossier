@@ -82,7 +82,8 @@ export const PostTabsSidebar: React.FC<PostTabsSidebarProps> = ({
                       resource={heroImage}
                       fill
                       imgClassName="mag-tabs-sidebar__img"
-                      size="4.5rem"
+                      payloadSize="small"
+                      size="192px"
                     />
                   </Link>
                 )}

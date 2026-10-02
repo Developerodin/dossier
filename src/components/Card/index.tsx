@@ -45,7 +45,7 @@ export const Card: React.FC<{
     >
       <div className="relative w-full ">
         {!cardImage && <div className="">No image</div>}
-        {cardImage && <Media resource={cardImage} size="33vw" />}
+        {cardImage && <Media resource={cardImage} size="(max-width: 768px) 100vw, 33vw" />}
       </div>
       <div className="p-4">
         {showCategories && hasCategories && (

@@ -90,7 +90,11 @@ export const PostArticle: React.FC<PostArticleProps> = ({
 
           {post.heroImage && typeof post.heroImage === 'object' && (
             <figure className="mag-post__hero">
-              <Media resource={post.heroImage} imgClassName="mag-post__hero-img" />
+              <Media
+                resource={post.heroImage}
+                payloadSize="xlarge"
+                imgClassName="mag-post__hero-img"
+              />
             </figure>
           )}
 

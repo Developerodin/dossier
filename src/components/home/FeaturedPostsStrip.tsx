@@ -24,7 +24,8 @@ export const FeaturedPostsStrip: React.FC<FeaturedPostsStripProps> = ({ posts })
                     resource={post.heroImage}
                     fill
                     imgClassName="mag-featured-strip__img"
-                    size="6.5rem"
+                    payloadSize="small"
+                    size="144px"
                   />
                 ) : (
                   <span className="mag-featured-strip__placeholder" />
