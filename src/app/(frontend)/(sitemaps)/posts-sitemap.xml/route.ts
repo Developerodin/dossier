@@ -9,16 +9,26 @@ import { getServerSideURL } from '@/utilities/getURL'
 const toImageEntry = (image: unknown, siteURL: string, title: string) => {
   if (!image || typeof image !== 'object' || !('url' in image)) return null
   const media = image as Media
-  if (!media.url) return null
+  const raw = typeof media.url === 'string' ? media.url.trim() : ''
+  // A missing URL must be omitted. Emitting a string (or the literal
+  // "undefined") makes next-sitemap write <image:loc>undefined</image:loc>,
+  // which Google rejects for the whole sitemap.
+  if (!raw || raw === 'undefined' || raw === 'null') return null
 
+  let loc: URL
   try {
-    return {
-      loc: new URL(media.url, siteURL),
-      title,
-      ...(media.alt ? { caption: media.alt } : {}),
-    }
+    loc = new URL(raw, siteURL)
   } catch {
     return null
+  }
+
+  if (loc.protocol !== 'http:' && loc.protocol !== 'https:') return null
+  if (!loc.href) return null
+
+  return {
+    loc,
+    title,
+    ...(media.alt ? { caption: media.alt } : {}),
   }
 }
 
@@ -72,6 +82,7 @@ const getPostsSitemap = unstable_cache(
   ['posts-sitemap'],
   {
     tags: ['posts-sitemap'],
+    revalidate: 3600,
   },
 )
 

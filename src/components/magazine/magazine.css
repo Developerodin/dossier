@@ -197,6 +197,7 @@
 }
 
 .mag-header-ticker__label {
+  color:#dc2626;
   flex-shrink: 0;
   font-size: 0.7875rem;
   font-weight: 700;

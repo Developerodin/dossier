@@ -15,13 +15,7 @@ import { beforeSyncWithSearch } from '@/search/beforeSync'
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 
-const s3Bucket = process.env.S3_BUCKET || ''
-const s3Region = process.env.S3_REGION || ''
-const s3AccessKeyId = process.env.S3_ACCESS_KEY_ID || ''
-const s3SecretAccessKey = process.env.S3_SECRET_ACCESS_KEY || ''
-const s3Enabled = Boolean(s3Bucket && s3Region && s3AccessKeyId && s3SecretAccessKey)
-const s3Endpoint =
-  process.env.S3_ENDPOINT || (s3Region ? `https://s3.${s3Region}.amazonaws.com` : undefined)
+const env = (name: string) => (process.env[name] || '').trim()
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | dossier` : 'dossier'
@@ -110,15 +104,23 @@ export const plugins: Plugin[] = [
     },
   }),
   // Read S3 env at plugin-apply time (after dotenv), not at module import time.
-  (incomingConfig) =>
-    s3Storage({
+  (incomingConfig) => {
+    const s3Bucket = env('S3_BUCKET')
+    const s3Region = env('S3_REGION')
+    const s3AccessKeyId = env('S3_ACCESS_KEY_ID')
+    const s3SecretAccessKey = env('S3_SECRET_ACCESS_KEY')
+    const s3Enabled = Boolean(s3Bucket && s3Region && s3AccessKeyId && s3SecretAccessKey)
+    const s3Endpoint =
+      env('S3_ENDPOINT') || (s3Region ? `https://s3.${s3Region}.amazonaws.com` : '')
+
+    return s3Storage({
       enabled: s3Enabled,
       // Omit acl — modern S3 buckets use "Bucket owner enforced" and reject ACLs.
       // Make objects public via bucket policy instead (see .env.example).
       bucket: s3Bucket,
       // Server-side upload by default (reliable image processing + thumbnails).
       // Set S3_CLIENT_UPLOADS=true on Vercel for large files (requires bucket CORS).
-      clientUploads: process.env.S3_CLIENT_UPLOADS === 'true',
+      clientUploads: env('S3_CLIENT_UPLOADS') === 'true',
       collections: {
         media: true,
       },
@@ -131,9 +133,10 @@ export const plugins: Plugin[] = [
         ...(s3Endpoint
           ? {
               endpoint: s3Endpoint,
-              forcePathStyle: process.env.S3_FORCE_PATH_STYLE !== 'false',
+              forcePathStyle: env('S3_FORCE_PATH_STYLE') !== 'false',
             }
           : {}),
       },
-    })(incomingConfig),
+    })(incomingConfig)
+  },
 ]
