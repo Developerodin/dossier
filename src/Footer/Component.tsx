@@ -5,19 +5,13 @@ import React from 'react'
 import type { Form } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
-import {
-  SocialPlatformIcon,
-  socialPlatformLabel,
-} from '@/components/magazine/SocialPlatformIcon'
 import { resolveFooterData } from './defaults'
 import { NewsletterSignup } from './NewsletterSignup'
 
 import './footer.css'
 import '@/components/magazine/magazine.css'
 
-function resolveNewsletterFormId(
-  form: number | Form | null | undefined,
-): number | string | null {
+function resolveNewsletterFormId(form: number | Form | null | undefined): number | string | null {
   if (form == null) return null
   if (typeof form === 'object') return form.id
   return form
@@ -29,7 +23,6 @@ export async function Footer() {
 
   const quickLinks = data.quickLinks || []
   const popularPages = data.popularPages || []
-  const socialLinks = data.socialLinks || []
   const newsletterFormId = resolveNewsletterFormId(data.newsletter?.form)
 
   return (
@@ -71,30 +64,6 @@ export async function Footer() {
                     <CMSLink {...link} appearance="inline" className="site-footer__link" />
                   </li>
                 ))}
-              </ul>
-            </div>
-            <div className="mag-footer__follow">
-              <p className="site-footer__col-title">Follow us</p>
-              <ul className="mag-follow__grid">
-                {socialLinks.map(({ platform, url, id }, index) => {
-                  if (!platform) return null
-                  const label = socialPlatformLabel(platform)
-                  return (
-                    <li key={id ?? `${platform}-${index}`}>
-                      <a
-                        className="mag-follow__item"
-                        href={url || '#'}
-                        aria-label={label}
-                        title={label}
-                      >
-                        <SocialPlatformIcon
-                          platform={platform}
-                          className="mag-follow__icon"
-                        />
-                      </a>
-                    </li>
-                  )
-                })}
               </ul>
             </div>
           </div>
